@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ColorPrimary">#FFFFFF</color>
+    <color name="ColorPrimaryDark">#c31c13</color>
+    <color name="tabsScrollColor">#8a140e</color>
+    <color name="ColorSecondary">#d6000000</color>
+    <color name="GoldButton">#fff17c</color>
+    <color name="Green">#34ff24</color>
+    <color name="Orange_display">#eda921</color>
+    <color name="display_bg">#383736</color>
+    <color name="header_color">#008080</color>
+</resources>
