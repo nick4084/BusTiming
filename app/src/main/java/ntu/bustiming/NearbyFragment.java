@@ -2,11 +2,13 @@ package ntu.bustiming;
 
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -28,7 +30,21 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -45,6 +61,7 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
     private OnFragmentInteractionListener mListener;
     double Longitude=0.0;
     double Latitude=0.0;
+    ProgressDialog p_dialog;
 
     //SupportMapFragment mapFragment;
     GoogleMap g_map;
@@ -98,6 +115,7 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.nearby_fragment, container, false);
+        CheckBusStopFile();
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map_fragment);
         mapFragment.getMapAsync(this);
@@ -123,16 +141,7 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
                         if (marker.getTitle().toString() != "You") {
                             String BusStopCode = marker.getTitle().substring(marker.getTitle().lastIndexOf("(") + 1, marker.getTitle().length() - 1);
                             String BusStopDescription = marker.getTitle().substring(0, marker.getTitle().lastIndexOf("(") - 1);
-                            LTA_API LTA_API = new LTA_API();
-                            JSONObject bus_arrival_timing = LTA_API.getBusArrivalByBusStopCode(BusStopCode);
-                            if(bus_arrival_timing!=null){
-                                //display bus timing
-                                try {
-                                    ((MainActivity) mainAct).displayBusTiming(bus_arrival_timing, BusStopCode, BusStopDescription);
-                                } catch (Exception e){
-                                    e.printStackTrace();
-                                }
-                            }
+                            setUpAndDisplayBusTiming(BusStopCode, BusStopDescription, marker.getPosition().latitude, marker.getPosition().longitude);
                         }
                         return false;
                     }
@@ -140,13 +149,70 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
             }
         }
     }
+    public void setUpAndDisplayBusTiming(String Busstop_code, String Busstop_description, double lat, double lng){
+        LTA_API LTA_API = new LTA_API(this.getContext());
+        JSONObject bus_arrival_timing = LTA_API.getBusArrivalByBusStopCode(Busstop_code);
+        if(bus_arrival_timing!=null){
+            //display bus timing
+            try {
+                ((MainActivity) mainAct).displayBusTiming(bus_arrival_timing, Busstop_code, Busstop_description, lat, lng);
+                //mListener.onNearbyFragmentInteraction();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void CheckBusStopFile(){
+            LTA_API api = new LTA_API(this.getContext());
+            File BusStop_file = new File(getContext().getFilesDir(), "BusTiming/BusStop.txt");
+            if (BusStop_file.exists()) {
+                try {
+                    //check total bus stop count is the same
+                    StringBuilder total = new StringBuilder();
+                    FileInputStream fis = new FileInputStream(BusStop_file);
+                    int numRead =0;
+                    byte[] bytes = new byte[fis.available()];
+                    while ((numRead = fis.read(bytes)) >= 0) {
+                        total.append(new String(bytes, 0, numRead));
+                    }
+                    fis.close();
+                    JSONObject jsonraw = new JSONObject(total.toString());
+                    BusStopStruct bs_struct = new BusStopStruct(jsonraw);
+                    JSONObject temp = api.getBusStops(bs_struct.getBs_Last_Skip_Count());
+                    JSONArray current = temp.getJSONArray("value");
+                    int count = current.length();
 
 
+                    if (count == bs_struct.getBs_Last_Count()) {
+                        //latest
+                        return;
+                    } else {
+                        //re-fetch file;
+                        try {
+                            api.fetchAllBusStop();
+                        } catch(Exception e){ e.printStackTrace(); }
 
+                    }
+                } catch (FileNotFoundException e) {
+                    Log.e("get bus stop file", "File not found: " + e.toString());
+                } catch (IOException e) {
+                    Log.e("get bus stop file", "Can not read file: " + e.toString());
+                }catch (JSONException e) {
+                    Log.e("get bus stop file", "JSON error: " + e.toString());
+                }
+            } else { //busstop file not yet fetched
+                try {
+                    api.fetchAllBusStop();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onNearbyFragmentInteraction(uri);
+            mListener.onNearbyFragmentInteraction();
         }
     }
 
@@ -180,6 +246,6 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onNearbyFragmentInteraction(Uri uri);
+        public void onNearbyFragmentInteraction();
     }
 }

@@ -5,6 +5,7 @@
     android:layout_weight="1"
     android:background="@color/header_color"
     tools:context=".MainActivity"
+    android:focusableInTouchMode="true"
     android:elevation="2dp">
     <LinearLayout
         android:id="@+id/Search_bar"

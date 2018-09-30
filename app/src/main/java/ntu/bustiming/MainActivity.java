@@ -13,6 +13,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -37,6 +40,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static ntu.bustiming.BusStop.Param_busstop_code;
+import static ntu.bustiming.BusStop.Param_description;
+import static ntu.bustiming.BusStop.Param_roadname;
 
 public class MainActivity extends AppCompatActivity implements FavoriteFragment.OnFragmentInteractionListener,
         RouteFragment.OnFragmentInteractionListener,
@@ -63,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     BusStop busStop_Class= null;
     private FusedLocationProviderClient mFusedLocationClient;
     GoogleMap gMap;
+    ListView lv_favorites;
+    JSONArray BusStop_list;
 
 
 
@@ -72,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        adapter =  new ViewPagerAdapter(getSupportFragmentManager(), Titles, NumbOfTabs);
+        adapter =  new ViewPagerAdapter(getSupportFragmentManager(), Titles, NumbOfTabs, getApplicationContext());
         // Assigning ViewPager View and setting the adapter
         pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(adapter);
@@ -117,7 +126,32 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
                 }
             });
         }
+    setUpBusStopList();
+    }
 
+    public void setUpBusStopList(){
+        BusStop bs_data = new BusStop(this);
+        BusStop_list  = bs_data.readBusStopfile();
+    }
+
+    public String getBusStopRdByCode(String code){
+        if(BusStop_list==null){
+            setUpBusStopList();
+        }
+        JSONObject busstop;
+        for (int i = 0; i<BusStop_list.length(); i++) {
+            try{
+                busstop = BusStop_list.getJSONObject(i);
+                String current_code =  busstop.getString(Param_busstop_code);
+                if(code.equals(current_code)){
+                    return busstop.getString(Param_roadname);
+                }
+            } catch(JSONException e){
+                e.printStackTrace();
+            }
+
+        }
+        return "";
     }
 
     public boolean checkLocationPermission() {
@@ -198,9 +232,6 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
             } else{
                 buildGoogleApiClient();
                 map.setMyLocationEnabled(true);
-
-
-
             }
         }
 
@@ -232,10 +263,17 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
         }
     }
 
-    public void displayBusTiming(JSONObject busTiming, String BusStopCode, String BusStopDescription){
+    public void displayBusTiming(JSONObject busTiming, String BusStopCode, String BusStopDescription, double lat, double lng){
         //display bus timing dialog pop up
-        //BusTimingDialog TimingDialog = new BusTimingDialog(this, busTiming, BusStopCode, BusStopDescription);
-        //TimingDialog.show();
+        String road = getBusStopRdByCode(BusStopCode);
+        BusTimingDialog TimingDialog = new BusTimingDialog(this, busTiming, BusStopCode, BusStopDescription, lat, lng, road,  new BusTimingDialog.OnDialogClickListener(){
+            @Override
+            public void notifyFavoriteDataChange() {
+                FavoriteFragment f = (FavoriteFragment) adapter.getItem(1);
+                f.refreshData();
+            }
+        });
+        TimingDialog.show();
 
 
     }
@@ -244,10 +282,9 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     public void onBookmarkFragmentInteraction(Uri uri) {
 
     }
-
     @Override
-    public void onNearbyFragmentInteraction(Uri uri) {
-
+    public void onNearbyFragmentInteraction() {
+        adapter.getItem(1);
     }
 
     @Override

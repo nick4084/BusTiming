@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bustiming_main_layout"
+    android:orientation="vertical" android:layout_width="250dp"
+    android:layout_height="wrap_content" android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="5dp">
+
+
+
+    <LinearLayout
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1">
+        <LinearLayout
+            android:orientation="vertical" android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="0.8">
+        <TextView
+            android:id="@+id/tv_bustiming_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12pt"
+            android:text="-" />
+        <TextView
+            android:id="@+id/tv_bustiming_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="8pt"
+            android:text="-" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal" android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="right"
+            android:layout_weight="0.2"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="5dp">
+
+            <CheckBox
+                android:id="@+id/busTimingLikeIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/fav_icon"
+                android:button="@null"
+                android:checked="false"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/lv_bustiming"
+            android:divider="@drawable/list_divider"
+            android:dividerHeight="1dp"/>
+        <TextView
+            android:id="@+id/tv_bustiming_empty"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:visibility="gone"
+            android:gravity="center"
+            android:text="No bus service now" />
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

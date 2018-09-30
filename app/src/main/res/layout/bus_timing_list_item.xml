@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content" android:weightSum="1" android:paddingBottom="5dp" android:paddingTop="5dp"    >
+
+
+
+    <LinearLayout
+        android:orientation="horizontal" android:layout_width="0dp"
+        android:layout_height="wrap_content" android:layout_weight="0.35" android:weightSum="1">
+        <TextView
+            android:id="@+id/tv_bustiming_serviceno"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="-"
+            android:paddingLeft="5dp"
+            android:textColor="#383736"
+            android:textSize="15pt" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal" android:layout_width="0dp" android:layout_weight="0.65" android:paddingLeft="5dp"
+        android:layout_height="match_parent" android:weightSum="1" android:id="@+id/lly_bustiming_container">
+        <!--next bus -->
+        <LinearLayout
+            android:orientation="vertical" android:layout_width="0px" android:layout_weight="0.33"
+            android:layout_height="match_parent" android:weightSum="1" android:id="@+id/lly_bustiming_NextBus_container">
+            <TextView
+                android:id="@+id/tvbustiming_nextbus_timing"
+                android:layout_width="match_parent"
+                android:layout_weight="0.4"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:layout_height="0dp"
+                android:text="" />
+            <LinearLayout
+                android:orientation="vertical" android:layout_width="match_parent" android:layout_weight="0.6"
+                android:layout_height="0dp" android:weightSum="1">
+                <ImageView
+                    android:id="@+id/iv_bustiming_nextbus_load"
+                    android:layout_height="0dp"
+                    android:layout_width="match_parent"
+                    android:layout_weight="0.5"
+                    app:srcCompat="@android:color/transparent" />
+                <ImageView
+                    android:id="@+id/iv_bustiming_nextbus_wab"
+                    android:layout_height="0dp"
+                    android:layout_width="match_parent"
+                    android:layout_weight="0.5"
+                    app:srcCompat="@android:color/transparent" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!--subsequent bus -->
+        <LinearLayout
+            android:orientation="vertical" android:layout_width="0px" android:layout_weight="0.33"
+            android:layout_height="match_parent" android:weightSum="1" android:id="@+id/lly_bustiming_SubBus_container">
+            <TextView
+                android:id="@+id/tvbustiming_subsequentbus_timing"
+                android:layout_width="match_parent"
+                android:layout_weight="0.4"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:layout_height="0dp"
+                android:text="" />
+            <LinearLayout
+                android:orientation="vertical" android:layout_width="match_parent" android:layout_weight="0.6"
+                android:layout_height="0dp" android:weightSum="1">
+                <ImageView
+                    android:id="@+id/iv_bustiming_subsequentbus_load"
+                    android:layout_height="0dp"
+                    android:layout_width="match_parent"
+                    android:layout_weight="0.5"
+                    app:srcCompat="@android:color/transparent" />
+                <ImageView
+                    android:id="@+id/iv_bustiming_subsequentbus_wab"
+                    android:layout_height="0dp"
+                    android:layout_width="match_parent"
+                    android:layout_weight="0.5"
+                    app:srcCompat="@android:color/transparent" />
+            </LinearLayout>
+        </LinearLayout>
+        <!--subsequent 3 bus -->
+
+        <LinearLayout
+            android:orientation="vertical" android:layout_width="0px" android:layout_weight="0.33"
+            android:layout_height="match_parent" android:weightSum="1" android:id="@+id/lly_bustiming_SubBus3_container">
+            <TextView
+                android:id="@+id/tvbustiming_subsequentbus3_timing"
+                android:layout_width="match_parent"
+                android:layout_weight="0.4"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:layout_height="0dp"
+                android:text="" />
+            <LinearLayout
+                android:orientation="vertical" android:layout_width="match_parent" android:layout_weight="0.6"
+                android:layout_height="0dp" android:weightSum="1">
+                <ImageView
+                    android:id="@+id/iv_bustiming_subsequentbus3_load"
+                    android:layout_height="0dp"
+                    android:layout_width="match_parent"
+                    android:layout_weight="0.5"
+                    app:srcCompat="@android:color/transparent" />
+                <ImageView
+                    android:id="@+id/iv_bustiming_subsequentbus3_wab"
+                    android:layout_height="0dp"
+                    android:layout_width="match_parent"
+                    android:layout_weight="0.5"
+                    app:srcCompat="@android:color/transparent" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

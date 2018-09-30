@@ -2,13 +2,18 @@ package ntu.bustiming;
 
 import android.content.Context;
 import android.location.Location;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class BusStop {
     JSONArray AllBusStop;
@@ -16,11 +21,11 @@ public class BusStop {
     Double range =0.01;
     Double Long= 0.0;
     Double Lat= 0.0;
-    String Param_Lat="Latitude";
-    String Param_Lon="Longitude";
-    String Param_busstop_code="BusStopCode";
-    String Param_roadname="RoadName";
-    String Param_description="Description";
+    static String Param_Lat="Latitude";
+    static String Param_Lon="Longitude";
+    static String Param_busstop_code="BusStopCode";
+    static String Param_roadname="RoadName";
+    static String Param_description="Description";
 
 
 
@@ -29,16 +34,17 @@ public class BusStop {
     }
 
     public JSONArray getBusStopByLocation(Location location){
-        JSONArray bs_array = readJSONFile();
+        //JSONArray bs_array = readJSONFile();
+        AllBusStop = readBusStopfile();
         JSONArray location_bs=null;
-        if(bs_array!=null){
+        if(AllBusStop!=null){
             location_bs= new JSONArray();
             try {
                 Lat= location.getLatitude();
                 Long=location.getLongitude();
                 //loop every entry to find nearby bus stop
-                for (int i = 0; i < bs_array.length(); i++) {
-                    JSONObject current_jobject = bs_array.getJSONObject(i);
+                for (int i = 0; i < AllBusStop.length(); i++) {
+                    JSONObject current_jobject = AllBusStop.getJSONObject(i);
                     if (current_jobject != null){
                         Double cur_long = current_jobject.getDouble(Param_Lon);
                         Double cur_lat = current_jobject.getDouble(Param_Lat);
@@ -47,9 +53,6 @@ public class BusStop {
                             location_bs.put(current_jobject);
                         }
                     }
-
-
-
                 }
             } catch(JSONException ex){
                 ex.printStackTrace();
@@ -62,7 +65,7 @@ public class BusStop {
     }
     public String getDestinationNameByCode(String DestinationCode){
         if(AllBusStop==null){
-            AllBusStop = readJSONFile();
+            AllBusStop = readBusStopfile();
         }
         JSONObject busstop;
         for (int i = 0; i<AllBusStop.length(); i++) {
@@ -85,16 +88,10 @@ public class BusStop {
         JSONArray jArray =null;
         String json_raw = null;
         try{
-
             InputStream is = mContext.getAssets().open("json_busstop_caa230617");
-
-
-
             int size = is.available();
             byte[] buffer = new byte[size];
-
             is.read(buffer);
-
             is.close();
             json_raw = new String(buffer, "UTF-8");
 
@@ -112,5 +109,29 @@ public class BusStop {
         }
 
         return jArray;
+    }
+
+    public JSONArray readBusStopfile(){
+        try {
+            File path = new File(mContext.getFilesDir(), "BusTiming/BusStop.txt");
+            StringBuilder total = new StringBuilder();
+            FileInputStream fis = new FileInputStream(path);
+            int numRead =0;
+            byte[] bytes = new byte[fis.available()];
+            while ((numRead = fis.read(bytes)) >= 0) {
+                total.append(new String(bytes, 0, numRead));
+            }
+            JSONObject jsonraw = new JSONObject(total.toString());
+            return jsonraw.getJSONArray("Bs_list");
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.i("readBusStopfile", "I/O error");
+            return null;
+        } catch (JSONException e){
+            Log.i("readBusStopfile", "conversion error");
+            return null;
+        }
+
+
     }
 }
