@@ -165,7 +165,7 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
 
     public void CheckBusStopFile(){
             LTA_API api = new LTA_API(this.getContext());
-            File BusStop_file = new File(getContext().getFilesDir(), "BusTiming/BusStop.txt");
+            File BusStop_file = new File(getContext().getFilesDir(), "BusTiming/BusStops.txt");
             if (BusStop_file.exists()) {
                 try {
                     //check total bus stop count is the same

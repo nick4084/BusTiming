@@ -6,30 +6,20 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.drive.Drive;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -41,9 +31,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static ntu.bustiming.BusStop.Param_busstop_code;
-import static ntu.bustiming.BusStop.Param_description;
-import static ntu.bustiming.BusStop.Param_roadname;
+import static ntu.bustiming.BusStops.Param_busstop_code;
+import static ntu.bustiming.BusStops.Param_roadname;
 
 public class MainActivity extends AppCompatActivity implements FavoriteFragment.OnFragmentInteractionListener,
         RouteFragment.OnFragmentInteractionListener,
@@ -67,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     CharSequence Titles[] = {"Nearby", "Favorite", "Route"};
     int NumbOfTabs = 3;
     GoogleApiClient mGoogleApiClient;
-    BusStop busStop_Class= null;
+    BusStops busStops_Class = null;
     private FusedLocationProviderClient mFusedLocationClient;
     GoogleMap gMap;
     ListView lv_favorites;
@@ -130,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     }
 
     public void setUpBusStopList(){
-        BusStop bs_data = new BusStop(this);
+        BusStops bs_data = new BusStops(this);
         BusStop_list  = bs_data.readBusStopfile();
     }
 
@@ -239,11 +228,11 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     }
 
     public void addBusStopToMap(){
-        if(busStop_Class==null){
-            busStop_Class=new BusStop(this);
+        if(busStops_Class ==null){
+            busStops_Class =new BusStops(this);
         }
         try{
-            JSONArray busstopArray = busStop_Class.getBusStopByLocation(mLastLocation);
+            JSONArray busstopArray = busStops_Class.getBusStopByLocation(mLastLocation);
             if(busstopArray!=null) {
                 for (int i = 0; i < busstopArray.length(); i++) {
                     JSONObject busstopObject = busstopArray.getJSONObject(i);

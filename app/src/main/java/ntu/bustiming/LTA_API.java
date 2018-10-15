@@ -139,7 +139,7 @@ public class LTA_API {
             if (!path.exists()) {
                 path.mkdir();
             }
-            File fw = new File(path, "BusStop.txt");
+            File fw = new File(path, "BusStops.txt");
             output = new BufferedWriter(new FileWriter(fw, false));
             output.write(dataToFile.toString());
             output.close();
