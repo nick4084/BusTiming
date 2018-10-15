@@ -23,6 +23,7 @@ public class FavoritesBaseAdapter extends BaseAdapter {
     ListView lv_parent;
     FavoritesBaseAdapter mAdapter;
     FavoritePersistentData data;
+    FavoriteBusStopStruct f_struct;
     public FavoritesBaseAdapter(JSONArray busstop_list, Context context){
         this.mContext = context;
         this.Busstop_list = busstop_list;
@@ -51,7 +52,8 @@ public class FavoritesBaseAdapter extends BaseAdapter {
     @Override
     public long getItemId(int i) {
         try {
-            return Long.parseLong(Busstop_list.getJSONObject(i).get(FavoriteBusStopStruct.PARAM_CODE).toString());
+            FavoriteBusStopStruct item = new FavoriteBusStopStruct(Busstop_list.getJSONObject(i));
+            return Long.parseLong(Integer.toString(item.getBusstop_code()));
         } catch(JSONException e){
             e.printStackTrace();
             return 0;
@@ -96,9 +98,13 @@ public class FavoritesBaseAdapter extends BaseAdapter {
         }
         try{
             JSONObject current_busstop = Busstop_list.getJSONObject(i);
-            final int code = current_busstop.getInt(FavoriteBusStopStruct.PARAM_CODE);
-            final String bs_name = current_busstop.get(FavoriteBusStopStruct.PARAM_PNAME).toString();
-            final String bus_stop_road = current_busstop.get(FavoriteBusStopStruct.PARAM_RD).toString();
+            f_struct = new FavoriteBusStopStruct(current_busstop);
+            //final int code = current_busstop.getInt(FavoriteBusStopStruct.PARAM_CODE);
+            //final String bs_name = current_busstop.get(FavoriteBusStopStruct.PARAM_PNAME).toString();
+            //final String bus_stop_road = current_busstop.get(FavoriteBusStopStruct.PARAM_RD).toString();
+            final int code = f_struct.getBusstop_code();
+            final String bs_name = f_struct.getBusstop_personalised_name();
+            final String bus_stop_road = f_struct.getBusstop_rd();
             view_item.tv_favorite_busstop_name.setText(bs_name);
             view_item.tv_hidden_code.setText(Integer.toString(code));
             view_item.tv_favourite_busstop_road.setText(bus_stop_road);
