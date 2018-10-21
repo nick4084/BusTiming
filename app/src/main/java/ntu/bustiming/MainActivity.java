@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     Marker mCurrLocationMarker;
     ViewPagerAdapter adapter;
     Location mLastLocation;
+    Location mCurrentLocation;
     SlidingTabLayout tabs;
     CharSequence Titles[] = {"Nearby", "Favorite", "Route"};
     int NumbOfTabs = 3;
@@ -69,7 +70,8 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        createLocationRequest();
+        buildGoogleApiClient();
         adapter =  new ViewPagerAdapter(getSupportFragmentManager(), Titles, NumbOfTabs, getApplicationContext());
         // Assigning ViewPager View and setting the adapter
         pager = (ViewPager) findViewById(R.id.pager);
@@ -148,14 +150,30 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
         int res = this.checkCallingOrSelfPermission(permission);
         return (res == PackageManager.PERMISSION_GRANTED);
     }
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+            mGoogleApiClient.connect();
+    }
+    protected void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+    }
     @Override
     public void onPause() {
         super.onPause();
-
         //stop location updates when Activity is no longer active
-        if (mGoogleApiClient != null) {
+        if (mGoogleApiClient != null&& mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mGoogleApiClient.isConnected()) {
+            if (mGoogleApiClient != null && checkLocationPermission()) {
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+            }
         }
     }
     protected synchronized void buildGoogleApiClient() {
@@ -164,18 +182,21 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(1000);
-        mLocationRequest.setFastestInterval(1000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED) {
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            mCurrentLocation = mLastLocation;
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
+    }
+    public void createLocationRequest(){
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
     }
 
     @Override
@@ -214,12 +235,12 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
             //Initialize Google Play Services
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED) {
-                    buildGoogleApiClient();
+                    //buildGoogleApiClient();
                     map.setMyLocationEnabled(true);
 
                 }
             } else{
-                buildGoogleApiClient();
+                //buildGoogleApiClient();
                 map.setMyLocationEnabled(true);
             }
         }

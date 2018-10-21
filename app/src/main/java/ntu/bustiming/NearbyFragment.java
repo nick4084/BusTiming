@@ -139,10 +139,16 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
                         if (marker.getTitle().toString() != "You") {
-                            String BusStopCode = marker.getTitle().substring(marker.getTitle().lastIndexOf("(") + 1, marker.getTitle().length() - 1);
-                            String BusStopDescription = marker.getTitle().substring(0, marker.getTitle().lastIndexOf("(") - 1);
-                            setUpAndDisplayBusTiming(BusStopCode, BusStopDescription, marker.getPosition().latitude, marker.getPosition().longitude);
+                            try {
+                                String BusStopCode = marker.getTitle().substring(marker.getTitle().lastIndexOf("(") + 1, marker.getTitle().length() - 1);
+                                String BusStopDescription = marker.getTitle().substring(0, marker.getTitle().lastIndexOf("(") - 1);
+                                setUpAndDisplayBusTiming(BusStopCode, BusStopDescription, marker.getPosition().latitude, marker.getPosition().longitude);
+                            }catch(Exception e){
+                                e.printStackTrace();
+                                return false;
+                            }
                         }
+
                         return false;
                     }
                 });
