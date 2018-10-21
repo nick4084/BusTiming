@@ -13,7 +13,6 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -94,7 +93,7 @@ public BusTimingDialog(@NonNull Context context, JSONObject BusTimingJSON, Strin
         });
 
         //handles the weather api
-            Weather_controller weather_controller = new Weather_controller(mcontext);
+            WeatherController weather_controller = new WeatherController(mcontext);
             weather_controller.get2HWeatherByLatLng(mLat, mLng, iv_weather_icon);
             iv_weather_icon.setOnClickListener(new View.OnClickListener() {
                 @Override

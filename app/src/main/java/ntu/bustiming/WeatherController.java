@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Weather_controller {
+public class WeatherController {
     private String URL_2h = "https://api.data.gov.sg/v1/environment/2-hour-weather-forecast";
     private String URL_24h = "https://api.data.gov.sg/v1/environment/24-hour-weather-forecast";
     private String PARAM_DATE = "?date_time-";
@@ -30,7 +30,7 @@ public class Weather_controller {
     String PARAM_PARTLY_CLOUDY = "Partly Cloudy";
     String PARAM_LIGHT_SHOWER = "Light Showers";
 
-    public Weather_controller(Context context){
+    public WeatherController(Context context){
         this.mcontext = context;
     }
 

@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -76,10 +74,10 @@ public class FavoriteFragment extends ListFragment implements AdapterView.OnItem
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
-        LTA_API LTA_API = new LTA_API(this.getActivity());
+        LTADatamallController LTADatamallController = new LTADatamallController(this.getActivity());
         TextView code = v.findViewById(R.id.tv_favorite_hidden_code);
         String bs_code = code.getText().toString();
-        JSONObject bus_arrival_timing = LTA_API.getBusArrivalByBusStopCode(bs_code);
+        JSONObject bus_arrival_timing = LTADatamallController.getBusArrivalByBusStopCode(bs_code);
         if(bus_arrival_timing!=null){
             //display bus timing
             try {
@@ -137,10 +135,10 @@ public class FavoriteFragment extends ListFragment implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        LTA_API LTA_API = new LTA_API(this.getActivity());
+        LTADatamallController LTADatamallController = new LTADatamallController(this.getActivity());
         TextView code = view.findViewById(R.id.tv_favorite_hidden_code);
         String bs_code = code.getText().toString();
-        JSONObject bus_arrival_timing = LTA_API.getBusArrivalByBusStopCode(bs_code);
+        JSONObject bus_arrival_timing = LTADatamallController.getBusArrivalByBusStopCode(bs_code);
         if(bus_arrival_timing!=null){
             //display bus timing
             try {
