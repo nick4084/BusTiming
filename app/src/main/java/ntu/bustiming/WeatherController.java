@@ -137,51 +137,55 @@ public class WeatherController {
                     curr = forecast.getJSONObject(i);
                     if(curr.getString("area").equals(nearest_loc_name)){
                         str_forecast = curr.getString("forecast");
+                        DisplayWeatherIcon(str_forecast);
+                        break;
                     }
-                }
-                String fc_str_arr[] = str_forecast.split("\\(");
-                str_forecast = fc_str_arr[0].replaceAll(" ", "");
-                String type="";
-                if(fc_str_arr.length > 1){
-                    type = fc_str_arr[1].substring(0, fc_str_arr[1].length()-1);
-                    switch (type){
-                        case "Day":
-                            switch(str_forecast){
-                                case "PartlyCloudy":
-                                    iv_icon_holder.setImageResource(R.drawable.partial_cloudy_day);
-                                    break;
-                                default:
-                                    break;
-                            }
-                            break;
-                        case "Night":
-                            switch(str_forecast){
-                                case "PartlyCloudy":
-                                    iv_icon_holder.setImageResource(R.drawable.partial_cloudy_night);
-                                    break;
-                                default:
-                                    break;
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                } else {
-                    switch(str_forecast){
-                        case "ModerateRain":
-                            iv_icon_holder.setImageResource(R.drawable.shower);
-                            break;
-                        case "ThunderyShowers":
-                            iv_icon_holder.setImageResource(R.drawable.thundery_shower);
-                            break;
-                        default:
-                            break;
-                    }
-
                 }
 
             } catch(JSONException e){
                 e.printStackTrace();
+            }
+        }
+        private void DisplayWeatherIcon(String str_forecast){
+            String fc_str_arr[] = str_forecast.split("\\(");
+            str_forecast = fc_str_arr[0].replaceAll(" ", "");
+            String type="";
+            if(fc_str_arr.length > 1){
+                type = fc_str_arr[1].substring(0, fc_str_arr[1].length()-1);
+                switch (type){
+                    case "Day":
+                        switch(str_forecast){
+                            case "PartlyCloudy":
+                                iv_icon_holder.setImageResource(R.drawable.partial_cloudy_day);
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case "Night":
+                        switch(str_forecast){
+                            case "PartlyCloudy":
+                                iv_icon_holder.setImageResource(R.drawable.partial_cloudy_night);
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            } else {
+                switch(str_forecast){
+                    case "ModerateRain":
+                        iv_icon_holder.setImageResource(R.drawable.shower);
+                        break;
+                    case "ThunderyShowers":
+                        iv_icon_holder.setImageResource(R.drawable.thundery_shower);
+                        break;
+                    default:
+                        break;
+                }
+
             }
         }
 

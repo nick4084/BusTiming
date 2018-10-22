@@ -67,7 +67,7 @@ public BusTimingDialog(@NonNull Context context, JSONObject BusTimingJSON, Strin
         } catch(JSONException ex){
         ex.printStackTrace();
         }
-        final FavoritePersistentData data = new FavoritePersistentData(mcontext);
+        final FavoriteDataController data = new FavoriteDataController(mcontext);
         cb_favorite.setChecked(data.checkIfFavorite(Integer.parseInt(mbusStopCode)));
             cb_favorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override

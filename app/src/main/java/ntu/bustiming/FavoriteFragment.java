@@ -18,7 +18,7 @@ import org.json.JSONObject;
 public class FavoriteFragment extends ListFragment implements AdapterView.OnItemClickListener {
     FavoritesBaseAdapter adapter;
     JSONArray liked_busstop;
-    FavoritePersistentData data;
+    FavoriteDataController data;
     Activity mainAct;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,7 +60,7 @@ public class FavoriteFragment extends ListFragment implements AdapterView.OnItem
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        data = new FavoritePersistentData(getActivity());
+        data = new FavoriteDataController(getActivity());
         liked_busstop = data.getLikedBusstop();
         adapter = new FavoritesBaseAdapter(liked_busstop, getActivity());
         setListAdapter(adapter);
@@ -168,7 +168,7 @@ public class FavoriteFragment extends ListFragment implements AdapterView.OnItem
 
     public void refreshData(){
         if(getActivity()!= null) {
-            data = new FavoritePersistentData(getActivity());
+            data = new FavoriteDataController(getActivity());
             liked_busstop = data.getLikedBusstop();
             adapter = new FavoritesBaseAdapter(liked_busstop, getActivity());
             setListAdapter(adapter);

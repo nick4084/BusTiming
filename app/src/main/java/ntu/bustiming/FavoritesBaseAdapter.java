@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -14,15 +13,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.zip.Inflater;
-
 public class FavoritesBaseAdapter extends BaseAdapter {
     private Context mContext;
     private JSONArray Busstop_list;
     private LayoutInflater mInflater;
     ListView lv_parent;
     FavoritesBaseAdapter mAdapter;
-    FavoritePersistentData data;
+    FavoriteDataController data;
     FavoriteBusStopStruct f_struct;
     public FavoritesBaseAdapter(JSONArray busstop_list, Context context){
         this.mContext = context;
@@ -69,7 +66,7 @@ public class FavoritesBaseAdapter extends BaseAdapter {
     }
 
     public void refresh(){
-            data = new FavoritePersistentData(mContext);
+            data = new FavoriteDataController(mContext);
             Busstop_list = data.getLikedBusstop();
     }
 
@@ -134,7 +131,7 @@ public class FavoritesBaseAdapter extends BaseAdapter {
             view_item.ib_favourite_busstop_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FavoritePersistentData data = new FavoritePersistentData(mContext);
+                    FavoriteDataController data = new FavoriteDataController(mContext);
                     data.deleteFavoriteByCode(code);
                     removeDataBypos(view_item.position);
                     refresh();

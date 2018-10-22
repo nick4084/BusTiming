@@ -21,11 +21,11 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
-public class FavoritePersistentData {
+public class FavoriteDataController {
     private JSONArray LikedBusstop;
     Context mContext;
 
-    public FavoritePersistentData(Context context) {
+    public FavoriteDataController(Context context) {
         mContext = context;
         LikedBusstop = fetchFavoriteBusStop();
     }
