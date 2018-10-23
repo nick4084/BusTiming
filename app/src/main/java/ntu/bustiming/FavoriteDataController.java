@@ -73,7 +73,7 @@ public class FavoriteDataController {
                 FavoriteBusStopStruct current = new FavoriteBusStopStruct(LikedBusstop.getJSONObject(i));
                 int current_code = current.getBusstop_code();
                 if (current_code == busstop_code) {
-                    LikedBusstop.remove(i);
+                    removeFromFavoriteBusstopList(i);
                     saveFavoriteBusStop();
                     return true;
                 }
@@ -82,6 +82,9 @@ public class FavoriteDataController {
             e.printStackTrace();
         }
         return false;
+    }
+    public void removeFromFavoriteBusstopList(int index){
+        LikedBusstop.remove(index);
     }
     public boolean checkIfFavorite(int code){
         try {

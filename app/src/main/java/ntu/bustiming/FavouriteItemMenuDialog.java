@@ -61,7 +61,7 @@ public class FavouriteItemMenuDialog extends Dialog implements DialogInterface.O
                 String new_pname = pname.getText().toString();
                 FavoriteDataController dataset = new FavoriteDataController(mcontext);
                 dataset.editFavoritePersonalisedNameByCode(code, new_pname);
-                JSONArray new_fav_list = dataset.fetchFavoriteBusStop();
+                //JSONArray new_fav_list = dataset.fetchFavoriteBusStop();
                 listener.onSaveClicked();
                 dismiss();
             }

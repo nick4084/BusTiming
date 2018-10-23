@@ -133,7 +133,7 @@ public class FavoritesBaseAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     FavoriteDataController data = new FavoriteDataController(mContext);
                     data.deleteFavoriteByCode(code);
-                    removeDataBypos(view_item.position);
+                    //removeDataBypos(view_item.position);
                     refresh();
                     notifyDataSetChanged();
                 }

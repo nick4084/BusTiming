@@ -179,8 +179,14 @@ public class WeatherController {
                     case "ModerateRain":
                         iv_icon_holder.setImageResource(R.drawable.shower);
                         break;
+                    case "Shower":
+                        iv_icon_holder.setImageResource(R.drawable.shower);
+                        break;
                     case "ThunderyShowers":
                         iv_icon_holder.setImageResource(R.drawable.thundery_shower);
+                        break;
+                    case "Cloudy":
+                        iv_icon_holder.setImageResource(R.drawable.cloudy);
                         break;
                     default:
                         break;
