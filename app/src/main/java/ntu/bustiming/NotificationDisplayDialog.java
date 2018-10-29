@@ -9,7 +9,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class RouteDisplayDialog extends Dialog{
+public class NotificationDisplayDialog extends Dialog{
     Notification ntf;
     EditText routeNameTxt;
     EditText busStopTxt;
@@ -19,7 +19,7 @@ public class RouteDisplayDialog extends Dialog{
     Button editBtn;
     int position;
 
-    public RouteDisplayDialog(@NonNull Context context,Notification ntf, int position) {
+    public NotificationDisplayDialog(@NonNull Context context, Notification ntf, int position) {
         //TODO: Pass in the index number
         super(context);
         this.position=position;
@@ -54,14 +54,14 @@ public class RouteDisplayDialog extends Dialog{
                 //TODO: Pass in a ntf
                 //TODO: Pass in a value
 
-                RouteEditDialog editDialog = new RouteEditDialog(getContext(), ntf, position);
+                NotificationEditDialog editDialog = new NotificationEditDialog(getContext(), ntf, position);
                 editDialog.show();
-                editDialog.setDialogResult(new RouteEditDialog.OnMyDialogResult(){
+                editDialog.setDialogResult(new NotificationEditDialog.OnMyDialogResult(){
                     public void finish(Notification ntf){
                         //TODO: Use singleton here
-                        RouteAdapter routeAdapter = RouteAdapter.getInstance();
-                        routeAdapter.replaceItem(ntf,position);
-                        routeAdapter.notifyDataSetChanged();
+                        NotificationBaseAdapter notificationBaseAdapter = NotificationBaseAdapter.getInstance();
+                        notificationBaseAdapter.replaceItem(ntf,position);
+                        notificationBaseAdapter.notifyDataSetChanged();
                         dismiss();
                     }
                 });

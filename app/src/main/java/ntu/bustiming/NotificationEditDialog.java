@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.BitSet;
 
-public class RouteEditDialog extends Dialog {
+public class NotificationEditDialog extends Dialog {
     OnMyDialogResult mDialogResult;
     EditText nameTxt;
     EditText busstopNameTxt;
@@ -33,12 +33,12 @@ public class RouteEditDialog extends Dialog {
     Boolean isEditMode;
     int position;
     //TODO: Add another method to handle edit saving //need the position
-    public RouteEditDialog(@NonNull Context context) {
+    public NotificationEditDialog(@NonNull Context context) {
         super(context);
         isEditMode = false;
     }
 
-    public RouteEditDialog(@NonNull Context context,Notification ntf, int position) {
+    public NotificationEditDialog(@NonNull Context context, Notification ntf, int position) {
         super(context);
         this.position = position;
         this.ntf=ntf;

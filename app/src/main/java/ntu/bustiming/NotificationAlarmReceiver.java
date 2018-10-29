@@ -5,6 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+/**
+ * This class receives the broadcast intent to acc
+ */
 public class NotificationAlarmReceiver extends BroadcastReceiver {
 
     private NotificationManager notificationManager;

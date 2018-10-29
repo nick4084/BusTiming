@@ -1,11 +1,9 @@
 package ntu.bustiming;
 
 import android.app.Activity;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class RouteFragment extends Fragment implements View.OnClickListener{
@@ -24,8 +21,8 @@ public class RouteFragment extends Fragment implements View.OnClickListener{
     private static final String ARG_PARAM2 = "param2";
     private ArrayList<Notification> routeList;
     private ListView listView;
-    private static RouteAdapter routeAdapter;
-    private static RoutePersistentData routePersistentData;
+    private static NotificationBaseAdapter notificationBaseAdapter;
+    private static NotificationPersistentData notificationPersistentData;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -73,18 +70,18 @@ public class RouteFragment extends Fragment implements View.OnClickListener{
 
         listView = view.findViewById(R.id.notifyList);
         //TODO: populate the data here
-        RoutePersistentData.init(getContext());
-        routePersistentData = RoutePersistentData.getInstance();
-        routeList = routePersistentData.getEntryList();
-        RouteAdapter.init(routeList, getContext());
-        routeAdapter = RouteAdapter.getInstance();
-        listView.setAdapter(routeAdapter);
+        NotificationPersistentData.init(getContext());
+        notificationPersistentData = NotificationPersistentData.getInstance();
+        routeList = notificationPersistentData.getEntryList();
+        NotificationBaseAdapter.init(routeList, getContext());
+        notificationBaseAdapter = NotificationBaseAdapter.getInstance();
+        listView.setAdapter(notificationBaseAdapter);
         listView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         Notification ntf = routeList.get(i);
-                        RouteDisplayDialog displayDialog = new RouteDisplayDialog(getContext(),routeList.get(i),i);
+                        NotificationDisplayDialog displayDialog = new NotificationDisplayDialog(getContext(),routeList.get(i),i);
                         displayDialog.show();
                         Log.d("test","item"+i+"clicked");
                     }
@@ -125,12 +122,12 @@ public class RouteFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-        RouteEditDialog editDialog = new RouteEditDialog(getContext());
+        NotificationEditDialog editDialog = new NotificationEditDialog(getContext());
         editDialog.show();
-        editDialog.setDialogResult(new RouteEditDialog.OnMyDialogResult(){
+        editDialog.setDialogResult(new NotificationEditDialog.OnMyDialogResult(){
             public void finish(Notification ntf){
                 routeList.add(ntf);
-                routeAdapter.notifyDataSetChanged();
+                notificationBaseAdapter.notifyDataSetChanged();
             }
         });
         NotificationService ns = new NotificationService(getContext());
