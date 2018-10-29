@@ -9,6 +9,9 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
+/**
+ * This class is the display dialog of the notification
+ */
 public class NotificationDisplayDialog extends Dialog{
     Notification ntf;
     EditText routeNameTxt;
@@ -19,6 +22,12 @@ public class NotificationDisplayDialog extends Dialog{
     Button editBtn;
     int position;
 
+    /**
+     * This is the constructor of NotificationDisplayDialog
+     * @param context The context of the app
+     * @param ntf The notification object
+     * @param position The index number of the object within the list
+     */
     public NotificationDisplayDialog(@NonNull Context context, Notification ntf, int position) {
         //TODO: Pass in the index number
         super(context);
