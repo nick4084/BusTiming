@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+/**
+ * This class handles reading bus stops stored in the app
+ */
 public class BusStops {
     JSONArray AllBusStop;
     Context mContext;
@@ -28,11 +31,19 @@ public class BusStops {
     static String Param_description="Description";
 
 
-
+    /**
+     * Constructor for the class
+     * @param context context of the application
+     */
     public BusStops(Context context) {
         mContext = context;
     }
 
+    /**
+     * This method get busstops in the nearby location
+     * @param location object containing lat lng
+     * @return a JSONArray of bus stops object
+     */
     public JSONArray getBusStopByLocation(Location location){
         //JSONArray bs_array = readJSONFile();
         AllBusStop = readBusStopfile();
@@ -63,6 +74,12 @@ public class BusStops {
 
         return location_bs;
     }
+
+    /**
+     * This method fetch the bus stop name by bus stop code
+     * @param DestinationCode the bus stop code
+     * @return name of the specified bus stop code
+     */
     public String getDestinationNameByCode(String DestinationCode){
         if(AllBusStop==null){
             AllBusStop = readBusStopfile();
@@ -83,6 +100,10 @@ public class BusStops {
         return null;
     }
 
+    /**
+     * This method read the text of busstops in json array format
+     * @return a JSONArray of bus stops
+     */
     public JSONArray readJSONFile(){
         JSONObject jobject = null;
         JSONArray jArray =null;
@@ -111,6 +132,10 @@ public class BusStops {
         return jArray;
     }
 
+    /**
+     *  This method return the text of busstops in json array format that is previously saved
+     * @return JSONArray of bus stops
+     */
     public JSONArray readBusStopfile(){
         try {
             File path = new File(mContext.getFilesDir(), "BusTiming/BusStops.txt");

@@ -15,12 +15,14 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/**
+ * This class defines the control logic of Favourite bus stop
+ */
 public class FavoriteFragment extends ListFragment implements AdapterView.OnItemClickListener {
     FavoritesBaseAdapter adapter;
     JSONArray liked_busstop;
     FavoriteDataController data;
     Activity mainAct;
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -38,7 +40,6 @@ public class FavoriteFragment extends ListFragment implements AdapterView.OnItem
      * @param param2 Parameter 2.
      * @return A new instance of fragment FavoriteFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static FavoriteFragment newInstance(String param1, String param2) {
         FavoriteFragment fragment = new FavoriteFragment();
         Bundle args = new Bundle();
@@ -48,6 +49,9 @@ public class FavoriteFragment extends ListFragment implements AdapterView.OnItem
         return fragment;
     }
 
+    /**
+     * Default Constructor
+     */
     public FavoriteFragment() {
         // Required empty public constructor
     }
@@ -57,6 +61,11 @@ public class FavoriteFragment extends ListFragment implements AdapterView.OnItem
         super.onResume();
     }
 
+    /**
+     * called during the onCreateActivity
+     * Initialise the listview
+     * @param savedInstanceState
+     */
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -71,6 +80,14 @@ public class FavoriteFragment extends ListFragment implements AdapterView.OnItem
 
     }
 
+    /**
+     * Override method.
+     * called when a row is selected from the listview
+     * @param l listview object
+     * @param v view of row
+     * @param position index of the row
+     * @param id id of row
+     */
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
@@ -93,6 +110,10 @@ public class FavoriteFragment extends ListFragment implements AdapterView.OnItem
         }
     }
 
+    /**
+     * called when this class is created
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +123,13 @@ public class FavoriteFragment extends ListFragment implements AdapterView.OnItem
         }
     }
 
+    /**
+     * This class define the UI to inflate
+     * @param inflater inflater object
+     * @param container container to inflate
+     * @param savedInstanceState saved state
+     * @return return the UI
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -133,6 +161,14 @@ public class FavoriteFragment extends ListFragment implements AdapterView.OnItem
         mListener = null;
     }
 
+    /**
+     * This method must be Implemented
+     * Handles on click event of listview selection
+     * @param adapterView adapter of the listview
+     * @param view UI of the row
+     * @param i index of the selected row
+     * @param l id of the selected row
+     */
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         LTADatamallController LTADatamallController = new LTADatamallController(this.getActivity());
@@ -153,10 +189,24 @@ public class FavoriteFragment extends ListFragment implements AdapterView.OnItem
             }
         }
     }
+
+    /**
+     * Displays the bus timing dialog
+     * @param busTiming
+     * @param BusStopCode
+     * @param BusStopDescription
+     * @param lat
+     * @param lng
+     * @param road
+     */
     public void displayBusTiming(JSONObject busTiming, String BusStopCode, String BusStopDescription, double lat, double lng, String road){
         //display bus timing dialog pop up
         road = ((MainActivity)getActivity()).getBusStopRdByCode(BusStopCode);
         BusTimingDialog TimingDialog = new BusTimingDialog(getActivity(), busTiming, BusStopCode, BusStopDescription, lat, lng, road, new BusTimingDialog.OnDialogClickListener(){
+            /**
+             * This method must be Implemented
+             * It will notify and call this method when there is changes to favorite bus stops
+             */
             @Override
             public void notifyFavoriteDataChange() {
                 refreshData();
@@ -166,6 +216,9 @@ public class FavoriteFragment extends ListFragment implements AdapterView.OnItem
         TimingDialog.show();
     }
 
+    /**
+     * Refresh the listview with updated data
+     */
     public void refreshData(){
         if(getActivity()!= null) {
             data = new FavoriteDataController(getActivity());

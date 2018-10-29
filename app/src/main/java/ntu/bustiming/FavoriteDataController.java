@@ -21,31 +21,42 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * This class handles the Create, Remove, Update, Delete of favourite bus stop
+ */
 public class FavoriteDataController {
     private JSONArray LikedBusstop;
     Context mContext;
 
+    /**
+     * Constructor method
+     * initialize likedbusstop by fetching all favorite bus stop
+     * @param context
+     */
     public FavoriteDataController(Context context) {
         mContext = context;
         LikedBusstop = fetchFavoriteBusStop();
     }
 
-    //read list of past saved busstop
+    /**
+     * fetch favorite bus stop by reading from app text file
+     * @return JSONArray of all bus stops
+     */
     public JSONArray fetchFavoriteBusStop() {
-            File file = new File(mContext.getFilesDir().getParent(),"BusTiming/Favorite.txt");
-            //Read text from file
-                try {
-                    //check total bus stop count is the same
-                    StringBuilder total = new StringBuilder();
-                    FileInputStream fis = new FileInputStream(file);
-                    int numRead =0;
-                    byte[] bytes = new byte[fis.available()];
-                    while ((numRead = fis.read(bytes)) >= 0) {
-                        total.append(new String(bytes, 0, numRead));
-                    }
-                JSONArray jsonraw = new JSONArray(total.toString());
-                return jsonraw;
-                //return new JSONArray(); //uncomment this line, run and like a b/s will clear off favorite.txt
+        File file = new File(mContext.getFilesDir().getParent(),"BusTiming/Favorite.txt");
+        //Read text from file
+        try {
+            //check total bus stop count is the same
+            StringBuilder total = new StringBuilder();
+            FileInputStream fis = new FileInputStream(file);
+            int numRead =0;
+            byte[] bytes = new byte[fis.available()];
+            while ((numRead = fis.read(bytes)) >= 0) {
+                total.append(new String(bytes, 0, numRead));
+            }
+            JSONArray jsonraw = new JSONArray(total.toString());
+            return jsonraw;
+            //return new JSONArray(); //uncomment this line, run and like a b/s will clear off favorite.txt
         } catch (IOException e) {
             e.printStackTrace();
             Log.i("readBusStopfile", "I/O error");
@@ -56,17 +67,32 @@ public class FavoriteDataController {
         }
     }
 
+    /**
+     * insert a favorite bus stop entry
+     * @param code bus stop code
+     * @param Desc bus stop description
+     * @param personalised_name bus stop personalised name
+     * @param lat bus stop latitude
+     * @param lng bus stop longitude
+     * @param road bus stop road name
+     * @return false if code is empty
+     */
     public boolean insertFavoriteBusStop(int code, String Desc, String personalised_name, double lat, double lng, String road) {
-            if (code != 0) {
-                FavoriteBusStopStruct fbst = new FavoriteBusStopStruct(code, Desc, Desc, lat, lng, road);
-                LikedBusstop.put(fbst.getFavoriteBusStopJSONObject());
-                saveFavoriteBusStop();
-                return true;
-            } else {
-                return false;
-            }
+        if (code != 0) {
+            FavoriteBusStopStruct fbst = new FavoriteBusStopStruct(code, Desc, Desc, lat, lng, road);
+            LikedBusstop.put(fbst.getFavoriteBusStopJSONObject());
+            saveFavoriteBusStop();
+            return true;
+        } else {
+            return false;
+        }
     }
 
+    /**
+     * Delete favorite bus stop by bus stop code
+     * @param busstop_code bus stop code to delete
+     * @return true of removed successfully
+     */
     public boolean deleteFavoriteByCode(int busstop_code) {
         try {
             for (int i = 0; i < LikedBusstop.length(); i++) {
@@ -83,6 +109,11 @@ public class FavoriteDataController {
         }
         return false;
     }
+
+    /**
+     * remove from favorite bus stop list by index
+     * @param index index of the favorite bus stop to remove
+     */
     public void removeFromFavoriteBusstopList(int index){
         LikedBusstop.remove(index);
     }
@@ -102,6 +133,12 @@ public class FavoriteDataController {
 
     }
 
+    /**
+     * Update favorite bus stop personalised name by bus stop code
+     * @param busstop_code bus stop code to update
+     * @param new_name bus stop name
+     * @return true if update successfully
+     */
     public boolean editFavoritePersonalisedNameByCode(int busstop_code, String new_name) {
         try {
             for (int i = 0; i < LikedBusstop.length(); i++) {
@@ -123,6 +160,9 @@ public class FavoriteDataController {
         return false;
     }
 
+    /**
+     * save favorite bus stop list into text file
+     */
     public void saveFavoriteBusStop() {
         File path = new File(mContext.getFilesDir().getParent(), "BusTiming");
         try{
@@ -141,34 +181,54 @@ public class FavoriteDataController {
 
     }
 
+    /**
+     * get the list of liked bus stop
+     * @return JSONArray of liked bus stop
+     */
     public JSONArray getLikedBusstop() {
         return LikedBusstop;
     }
 
+    /**
+     * setter for liked bus stop
+     * @param likedBusstop value to set
+     */
     public void setLikedBusstop(JSONArray likedBusstop) {
         LikedBusstop = likedBusstop;
     }
 
+    /**
+     * This class executes in the background
+     */
     private class Async extends AsyncTask<String, Void, Void> {
+        /**
+         * asynchronously write to text file
+         * @param params array of string
+         * @return null
+         */
         @Override
         protected Void doInBackground(String... params) {
             File path = new File(params[0], "BusTiming");
             try{
-            Writer output = null;
-            //create directory if not exist
-            if (!path.exists()) {
-                path.mkdir();
-            }
-            File fw = new File(path, "Favorite.txt");
-            output = new BufferedWriter(new FileWriter(fw, false));
-            output.write(params[1].toString());
-            output.close();
+                Writer output = null;
+                //create directory if not exist
+                if (!path.exists()) {
+                    path.mkdir();
+                }
+                File fw = new File(path, "Favorite.txt");
+                output = new BufferedWriter(new FileWriter(fw, false));
+                output.write(params[1].toString());
+                output.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
         }
 
+        /**
+         * called after doInBackground completes
+         * @param values
+         */
         @Override
         protected void onProgressUpdate(Void... values) {
             super.onProgressUpdate(values);

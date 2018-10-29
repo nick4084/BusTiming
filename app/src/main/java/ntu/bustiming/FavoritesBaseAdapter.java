@@ -13,6 +13,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * This Class is a controller of a Listview.
+ * It inflates the Listview
+ */
 public class FavoritesBaseAdapter extends BaseAdapter {
     private Context mContext;
     private JSONArray Busstop_list;
@@ -28,6 +32,11 @@ public class FavoritesBaseAdapter extends BaseAdapter {
         this.lv_parent = lv_parent;
         this.mAdapter = mAdapter;
     }
+
+    /**
+     * get the size of the bus stop JSONArray
+     * @return size
+     */
     @Override
     public int getCount() {
         if(Busstop_list != null) {
@@ -36,6 +45,11 @@ public class FavoritesBaseAdapter extends BaseAdapter {
         return 0;
     }
 
+    /**
+     * return object at an index
+     * @param i Index
+     * @return object at index
+     */
     @Override
     public Object getItem(int i) {
         try {
@@ -46,6 +60,11 @@ public class FavoritesBaseAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * get the Item id at index
+     * @param i Index
+     * @return Id
+     */
     @Override
     public long getItemId(int i) {
         try {
@@ -61,20 +80,29 @@ public class FavoritesBaseAdapter extends BaseAdapter {
         return Busstop_list;
     }
 
-    public void removeDataBypos(int i) {
-            Busstop_list.remove(i);
-    }
-
+    /**
+     * Do a fetch to get the latest favorite bus stops
+     */
     public void refresh(){
-            data = new FavoriteDataController(mContext);
-            Busstop_list = data.getLikedBusstop();
+        data = new FavoriteDataController(mContext);
+        Busstop_list = data.getLikedBusstop();
     }
 
+    /**
+     * Refresh the listview when the data is changed
+     */
     @Override
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
     }
 
+    /**
+     * Inflate the ListView with the number of favorite bus stop
+     * @param i index
+     * @param view UI
+     * @param viewGroup UI container
+     * @return UI
+     */
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         final ViewHolder view_item;
@@ -110,8 +138,8 @@ public class FavoritesBaseAdapter extends BaseAdapter {
             view_item.ib_favorite_busstop_menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   TextView tv_code = view.getRootView().findViewById(R.id.tv_favorite_hidden_code);
-                   TextView tv_name = view.getRootView().findViewById(R.id.tv_busstop_name);
+                    TextView tv_code = view.getRootView().findViewById(R.id.tv_favorite_hidden_code);
+                    TextView tv_name = view.getRootView().findViewById(R.id.tv_busstop_name);
                     //int code = Integer.parseInt(tv_code.getText().toString());
                     //String pname = tv_name.getText().toString();
                     FavouriteItemMenuDialog EditDialog = new FavouriteItemMenuDialog(mContext, code, bs_name, new FavouriteItemMenuDialog.OnDialogClickListener() {
@@ -145,6 +173,9 @@ public class FavoritesBaseAdapter extends BaseAdapter {
         return view;
     }
 
+    /**
+     * defines a UI structure of the Listview's row
+     */
     static class ViewHolder{
         int position;
         TextView tv_favorite_busstop_name;

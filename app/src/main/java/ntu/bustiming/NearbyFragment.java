@@ -29,6 +29,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+/**
+ * This Class control the logic of the Nearby tab which holds a google Map
+ */
 public class NearbyFragment extends Fragment implements OnMapReadyCallback {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -50,6 +53,10 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
     Context mContext;
     Activity mainAct;
 
+    /**
+     * called when the activity is created
+     * @param savedInstanceState name-value pair of saved state
+     */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -60,13 +67,10 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param param1 message 1 from creator
+     * @param param2 message 2 from creator
      * @return A new instance of fragment AccountFragment.
      */
-
-
-    // TODO: Rename and change types and number of parameters
     public static NearbyFragment newInstance(String param1, String param2) {
         NearbyFragment fragment = new NearbyFragment();
         Bundle args = new Bundle();
@@ -76,10 +80,17 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
         return fragment;
     }
 
+    /**
+     * Default constructor
+     */
     public NearbyFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Called when this fragment is created
+     * @param savedInstanceState name-value pair of previously saved state
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,18 +102,32 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
+    /**
+     * called to create the UI when first created
+     * @param inflater layout inflater object
+     * @param container container
+     * @param savedInstanceState name-value pair of previously saved state
+     * @return UI
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.nearby_fragment, container, false);
+
         CheckBusStopFile();
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map_fragment);
         mapFragment.getMapAsync(this);
+
         return view;
     }
 
+    /**
+     * Must Implement this method.
+     * Called when the map is ready to be displayed
+     * @param googleMap map that is ready
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mainAct = ((MainActivity) getActivity());
@@ -136,6 +161,14 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
             }
         }
     }
+
+    /**
+     * Display the bus arrival timing dialog
+     * @param Busstop_code bus stop code
+     * @param Busstop_description bus stop description
+     * @param lat latitude
+     * @param lng longitude
+     */
     public void setUpAndDisplayBusTiming(String Busstop_code, String Busstop_description, double lat, double lng){
         LTADatamallController LTADatamallController = new LTADatamallController(this.getContext());
         JSONObject bus_arrival_timing = LTADatamallController.getBusArrivalByBusStopCode(Busstop_code);
@@ -150,6 +183,10 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    /**
+     * This class check if the current bus stop count stored is the same as LTA datamall.
+     * It will re-fetch all bus stop if stored is not the latest.
+     */
     public void CheckBusStopFile(){
             LTADatamallController api = new LTADatamallController(this.getContext());
             File BusStop_file = new File(getContext().getFilesDir(), "BusTiming/BusStops.txt");
@@ -196,7 +233,7 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
                 }
             }
         }
-    // TODO: Rename method, update argument and hook method into UI event
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onNearbyFragmentInteraction();

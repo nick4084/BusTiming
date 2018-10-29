@@ -23,6 +23,10 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
+/**
+ * This class Setup and Establish connection.
+ * Call API from LTA datamall.
+ */
 public class LTADatamallController {
     String API_KEY= "yx6RmXTRhXhBAodoKDvWxQ==";
     String UNIQUE_USERID= "dc5eed1e-a2be-4323-aa3e-eb9680180eb2";
@@ -37,6 +41,10 @@ public class LTADatamallController {
     String ACCEPT_HEADER="application/json";
     Context mContext;
 
+    /**
+     * Constructor method
+     * @param mContext application context
+     */
     public LTADatamallController(Context mContext){
     this.mContext = mContext;
     }
@@ -51,6 +59,11 @@ public class LTADatamallController {
         }
         return RETURN;
     }
+
+    /**
+     * get Bus service of bus
+     * @return JSONObject of bus service
+     */
     public JSONObject getBusServices(){
         JSONObject RETURN = null;
         String URL_PATH = API_URL + API_BUS_SERVICE;
@@ -63,6 +76,11 @@ public class LTADatamallController {
         return RETURN;
     }
 
+    /**
+     * get bus stop in group of 50
+     * @param skip define the starting skipped index of bus stop
+     * @return JSONObject of 50 bus stop
+     */
     public JSONObject getBusStops(int skip){
         JSONObject RETURN = null;
         String URL_PATH = API_URL + API_BUS_STOP + "?$skip=" + skip;
@@ -75,6 +93,10 @@ public class LTADatamallController {
         return RETURN;
     }
 
+    /**
+     * get Bus Route of buses
+     * @return a JSONObject of all bus route
+     */
     public JSONObject getBusRoute(){
         JSONObject RETURN = null;
         String URL_PATH = API_URL + API_BUS_ROUTE;
@@ -86,6 +108,12 @@ public class LTADatamallController {
         }
         return RETURN;
     }
+
+    /**
+     * get Bus Arrival details of bus stop by bus stop code
+     * @param BusStop_Code bus stop code
+     * @return JSONObject of bus stop bus arrival details
+     */
     public JSONObject getBusArrivalByBusStopCode(String BusStop_Code){
         JSONObject RETURN;
         String URL_PATH = API_URL + API_BUS_ARRIVAL+ BusStop_Code + "&SST=True";
@@ -98,6 +126,9 @@ public class LTADatamallController {
         return RETURN;
     }
 
+    /**
+     * fetch the whole list of bus stops and write it to a text file
+     */
     public void fetchAllBusStop(){
         int skip = 0, size =0;
         JSONObject lot;
@@ -149,9 +180,18 @@ public class LTADatamallController {
         p_dialog.dismiss();
     }
 
+    /**
+     * Asynchronously execute DoInBackground by passing in the URL as param[0]
+     * Send HTTP GET request
+     */
     private class LoadData extends AsyncTask<String, Void, JSONObject> {
 
 
+        /**
+         * The Async Method that send the HTTP request
+         * @param params array of strings
+         * @return JSONObject of the HTTP request result
+         */
         @Override
         protected JSONObject doInBackground(String... params) {
             StringBuilder total;
@@ -196,6 +236,7 @@ public class LTADatamallController {
         }
 
     }
+
 
     private class Async extends AsyncTask<String, Integer, JSONObject> {
 

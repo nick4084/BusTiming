@@ -19,6 +19,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * This class setup and establish connection with gov open data weather API
+ * send HTTP GET request to get weather forecast in singapore
+ */
 public class WeatherController {
     private String URL_2h = "https://api.data.gov.sg/v1/environment/2-hour-weather-forecast";
     private String URL_24h = "https://api.data.gov.sg/v1/environment/24-hour-weather-forecast";
@@ -30,10 +34,20 @@ public class WeatherController {
     String PARAM_PARTLY_CLOUDY = "Partly Cloudy";
     String PARAM_LIGHT_SHOWER = "Light Showers";
 
+    /**
+     * Constructor
+     * @param context application context
+     */
     public WeatherController(Context context){
         this.mcontext = context;
     }
 
+    /**
+     * get weather details and set icon based on weather
+     * @param lat Latitude
+     * @param lng Longitude
+     * @param icon_holder ImageView to set icon
+     */
     public void get2HWeatherByLatLng(double lat, double lng, ImageView icon_holder){
         try {
             String URL_PATH = URL_2h + PARAM_DATE + getDate();
@@ -46,6 +60,10 @@ public class WeatherController {
         }
     }
 
+    /**
+     * get current date in the format yyyy-MMM-dd
+     * @return date string
+     */
     protected String getDate(){
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MMM-dd");
@@ -53,19 +71,37 @@ public class WeatherController {
         return formattedDate;
     }
 
+    /**
+     * Asynchronously send HTTP request and set result Icon based on location and forecast
+     */
     private class LoadWeatherData extends AsyncTask<String, Void, JSONObject> {
         ImageView iv_icon_holder;
         double lat=0;
         double lng=0;
+
+        /**
+         * setter for ImageView
+         * @param iv_icon
+         */
         public void setImageView(ImageView iv_icon){
             iv_icon_holder = iv_icon;
         }
 
+        /**
+         * setter for latitude and longitude
+         * @param lat latitude
+         * @param lng longitude
+         */
         public void setLatLng(double lat, double lng){
             this.lat = lat;
             this.lng = lng;
         }
 
+        /**
+         * This method run asynchronously
+         * @param params String array of parameters to pass in
+         * @return JSONObject of weather forecast
+         */
         @Override
         protected JSONObject doInBackground(String... params) {
             JSONObject JsonObject=null;
@@ -100,6 +136,10 @@ public class WeatherController {
             super.onProgressUpdate(values);
         }
 
+        /**
+         * called after doInProgress returns
+         * @param object JSONObject returned from DoInBackground
+         */
         @Override
         protected void onPostExecute(JSONObject object) {
             super.onPostExecute(object);
@@ -146,6 +186,11 @@ public class WeatherController {
                 e.printStackTrace();
             }
         }
+
+        /**
+         * Display weather icon based on weather forecast
+         * @param str_forecast string value of forecast
+         */
         private void DisplayWeatherIcon(String str_forecast){
             String fc_str_arr[] = str_forecast.split("\\(");
             str_forecast = fc_str_arr[0].replaceAll(" ", "");
@@ -195,6 +240,15 @@ public class WeatherController {
             }
         }
 
+        /**
+         * This method calculate the Distance from 2 pair of Longitude and Latitude
+         * and return in meter
+         * @param lat1 Latitude of Location 1
+         * @param lon1 Longitude of Location 1
+         * @param lat2 Latitude of Locaiton 2
+         * @param lon2 Longitude of Location 2
+         * @return distance in meter
+         */
         private double distance(double lat1, double lon1, double lat2, double lon2) {
             // haversine great circle distance approximation, returns meters
             double theta = lon1 - lon2;
