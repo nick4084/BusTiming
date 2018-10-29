@@ -20,6 +20,9 @@ import static ntu.bustiming.BusStops.Param_busstop_code;
 import static ntu.bustiming.BusStops.Param_description;
 import static ntu.bustiming.BusStops.Param_roadname;
 
+/**
+ * this class handles the search request when the application request for it
+ */
 public class SearchableActivity extends Activity {
 
     Context mContext;
@@ -85,6 +88,10 @@ public class SearchableActivity extends Activity {
 
     }
 
+    /** this method get the bus stop road string
+     * @param code bus stop code
+     * @return bus stop road name
+     */
     public String getBusStopRdByCode(String code){
         if(BusStop_list==null){
             setUpBusStopList();
@@ -105,6 +112,10 @@ public class SearchableActivity extends Activity {
         return "";
     }
 
+    /** this method get the bus stop object
+     * @param code bus stop code
+     * @return the json object containg the bus stop information in json format
+     */
     public JSONObject getBusStopobjectByCode(String code){
         if(BusStop_list==null){
             setUpBusStopList();
@@ -125,6 +136,10 @@ public class SearchableActivity extends Activity {
         return null;
     }
 
+    /** get bus stop code
+     * @param code bus stop description
+     * @return bus stop code
+     */
     public String getBusStopCodeByDescrption(String code){
         if(BusStop_list==null){
             setUpBusStopList();
@@ -145,6 +160,10 @@ public class SearchableActivity extends Activity {
         return "";
     }
 
+    /** get the bus stop road name
+     * @param code bus stop code
+     * @return bus stop road name
+     */
     public String getBusStopRdNameByDescrption(String code){
         if(BusStop_list==null){
             setUpBusStopList();
@@ -165,6 +184,10 @@ public class SearchableActivity extends Activity {
         return "";
     }
 
+    /** get bus stop description
+     * @param code bus stop code
+     * @return bus stop description
+     */
     public String getBusStopDescriptionByCode(String code){
         if(BusStop_list==null){
             setUpBusStopList();
@@ -185,11 +208,17 @@ public class SearchableActivity extends Activity {
         return "";
     }
 
+    /**
+     * this method get the list of busstop
+     */
     public void setUpBusStopList(){
         BusStops bs_data = new BusStops(this);
         BusStop_list  = bs_data.readBusStopfile();
     }
 
+    /**
+     * this method display the bus display timing
+     */
     public void setUpAndDisplayBusTiming(){
         LTADatamallController LTADatamallController = new LTADatamallController(this);
         JSONObject bus_arrival_timing = LTADatamallController.getBusStops(50);
@@ -203,6 +232,12 @@ public class SearchableActivity extends Activity {
             }
         }
     }
+
+    /** this method display the bus display timing
+     * @param busTiming json object of busstop
+     * @param BusStopCode bus stop code
+     * @param BusStopDescription bus stop description
+     */
     public void displayBusTiming(JSONObject busTiming, String BusStopCode, String BusStopDescription){
         //display bus timing dialog pop up
         String road = getBusStopRdByCode(BusStopCode);
