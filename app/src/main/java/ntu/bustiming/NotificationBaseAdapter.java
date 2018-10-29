@@ -18,6 +18,10 @@ import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
+/**
+ * This class is the base adapter that populate the list view of notification
+ * It is implemented as a singleton to ensure only one instance is created
+ */
 public class NotificationBaseAdapter extends BaseAdapter{
     //how to write adapter
     //https://abhiandroid.com/ui/baseadapter-tutorial-example.html
@@ -28,6 +32,10 @@ public class NotificationBaseAdapter extends BaseAdapter{
     private static NotificationPersistentData notificationPersistentData;
 
 
+    /**
+     * This is the inner class of notificationBaseAdapter
+     * It contains the data needed for every entry in the list view
+     */
     private static class ViewHolder {
         int position;
         TextView ntf_name;
@@ -35,12 +43,21 @@ public class NotificationBaseAdapter extends BaseAdapter{
         ToggleButton ntf_onoff;
     }
 
+    /**
+     * This method is the initialisation method that calls the private constructor
+     * @param routeList The arraylist that contains the notification entries
+     * @param context The context of the app
+     */
     public static void init(ArrayList<Notification> routeList, Context context){
         if(instance==null){
             instance = new NotificationBaseAdapter(routeList,context);
         }
     }
 
+    /**
+     * This method will return the instance of this class
+     * @return The instance of this class
+     */
     public static NotificationBaseAdapter getInstance(){
         return instance;
     }
@@ -138,6 +155,11 @@ public class NotificationBaseAdapter extends BaseAdapter{
         return view;
     }
 
+    /**
+     * This method will replace an item in the notification list
+     * @param ntf The new notification entry
+     * @param position
+     */
     public void replaceItem(Notification ntf,int position){
         routeList.set(position,ntf);
     }

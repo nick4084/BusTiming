@@ -10,19 +10,26 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 
+/**
+ * This class handles the sending and creation of the notification
+ */
 public class NotificationService {
     private static final String CHANNEL_ID = "Primary Channel";
     private NotificationManager notifyManager;
     private Context context;
     private static final int NOTIFICATION_ID = 0;
     private static final String ACTION_DISMISS_NOTIFICATION = "ntu.bustiming.ACTION_DISMISS_NOTIFICATION";
+
+    /**
+     * This is the constructor for NotificationService
+     * @param context The context of the app
+     */
     public NotificationService(Context context){
         this.context = context;
         createNotificationChannel();
         NotificationReceiver receiver = new NotificationReceiver();
         context.registerReceiver(receiver,new IntentFilter(ACTION_DISMISS_NOTIFICATION));
     }
-
 
 
     private void createNotificationChannel(){
@@ -51,6 +58,9 @@ public class NotificationService {
         return notifyBuilder;
     }
 
+    /**
+     * This method will send the notification
+     */
     public void sendNotification(){
         NotificationCompat.Builder notifyBuilder = getNotificationBuilder();
         Intent cancelIntent = new Intent(ACTION_DISMISS_NOTIFICATION);
@@ -62,6 +72,9 @@ public class NotificationService {
 
     }
 
+    /**
+     * This method will update and change the content of the notification
+     */
     public void updateNotification(){
         String s = "something";
         NotificationCompat.Builder notifyBuilder = getNotificationBuilder();
@@ -69,10 +82,16 @@ public class NotificationService {
         notifyManager.notify(NOTIFICATION_ID,notifyBuilder.build());
     }
 
+    /**
+     * This method will cancel the notification
+     */
     public void cancelNotification(){
         notifyManager.cancel(NOTIFICATION_ID);
     }
 
+    /**
+     * This inner class will receive the notification broadcast intent
+     */
     public class NotificationReceiver extends BroadcastReceiver {
         public NotificationReceiver() {
         }

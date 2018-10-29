@@ -21,7 +21,9 @@ import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.BitSet;
-
+/**
+ * This class is the edit dialog of the notification
+ */
 public class NotificationEditDialog extends Dialog {
     OnMyDialogResult mDialogResult;
     EditText nameTxt;
@@ -32,12 +34,22 @@ public class NotificationEditDialog extends Dialog {
     Notification ntf;
     Boolean isEditMode;
     int position;
-    //TODO: Add another method to handle edit saving //need the position
+
+    /**
+     * This is the constructor of NotificationEditDialog
+     * @param context The context of the app
+     */
     public NotificationEditDialog(@NonNull Context context) {
         super(context);
         isEditMode = false;
     }
 
+    /** This is the constructor of NotificationEditDialog
+     *
+     * @param context The context of the app
+     * @param ntf The notification object
+     * @param position The index number of the object within the list
+     */
     public NotificationEditDialog(@NonNull Context context, Notification ntf, int position) {
         super(context);
         this.position = position;
@@ -120,10 +132,18 @@ public class NotificationEditDialog extends Dialog {
         dismiss();
     }
 
+    /**
+     * This method is used to implement the Observer pattern
+     * It allows user to create an instance of OnMyDialogResult and set it
+     * @param dialogResult The class that implements OnMyDialogResult interface
+     */
     public void setDialogResult(OnMyDialogResult dialogResult) {
         mDialogResult = dialogResult;
     }
 
+    /**
+     * This interface is needed to implement the Observer pattern
+     */
     public interface OnMyDialogResult {
         void finish(Notification ntf);
     }

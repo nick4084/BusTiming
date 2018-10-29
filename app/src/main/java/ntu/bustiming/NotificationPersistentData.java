@@ -10,6 +10,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.BitSet;
 
+/**
+ * This class saves the notification entries in sharedPreference
+ * It is implemented as a singleton to ensure only one instance is created
+ */
 public class NotificationPersistentData {
     private JSONArray entryList;
     private SharedPreferences sharedPref;
@@ -17,13 +21,19 @@ public class NotificationPersistentData {
     Context context;
     private final String key = "data";
     private static NotificationPersistentData instance;
-
+    /**
+     * This method is the initialisation method that calls the private constructor
+     * @param context The context of the app
+     */
     public static void init(Context context){
         if(instance==null){
             instance = new NotificationPersistentData(context);
         }
     }
-
+    /**
+     * This method will return the instance of this class
+     * @return The instance of this class
+     */
     public static NotificationPersistentData getInstance(){
         return instance;
     }
@@ -75,6 +85,12 @@ public class NotificationPersistentData {
             }
         }
     */
+
+    /**
+     * This method is called when the notification list is updated
+     * The sharedPreference will be updated
+     * @param routeList
+     */
     public void refreshList(ArrayList<Notification> routeList) {
         try {
             entryList = new JSONArray();
@@ -98,6 +114,10 @@ public class NotificationPersistentData {
         }
     }
 
+    /**
+     * This method will return a list of notification entries
+     * @return The arraylist that contains the notification entries
+     */
     public ArrayList<Notification> getEntryList() {
         ArrayList<Notification> ntfList = new ArrayList<>();
         try {
@@ -131,7 +151,7 @@ public class NotificationPersistentData {
 
     }
 
-
+/*
     public void addNewEntry(Notification ntf) {
         try {
             JSONObject obj = new JSONObject();
@@ -177,6 +197,6 @@ public class NotificationPersistentData {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 }
