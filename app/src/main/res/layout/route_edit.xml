@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/busnumberNameTf"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Choose bus number "
+        android:inputType="number"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editRouteBusnumberTxt" />
+
+    <TextView
+        android:id="@+id/editRouteBusnumberTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Bus Number:"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/busstopNameTf" />
+
+    <TextView
+        android:id="@+id/editRouteDayTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Day:"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timePicker" />
+
+    <TextView
+        android:id="@+id/editRouteTimeTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Time:"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/busnumberNameTf" />
+
+    <TextView
+        android:id="@+id/editRouteNameTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Name:"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/editRouteBusstopTxt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Bus Stop:"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/routeNameTf" />
+
+    <EditText
+        android:id="@+id/routeNameTf"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Name for route "
+        android:inputType="textPersonName"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editRouteNameTxt" />
+
+    <EditText
+        android:id="@+id/busstopNameTf"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="Choose bus stop "
+        android:inputType="number"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editRouteBusstopTxt" />
+
+    <ToggleButton
+        android:id="@+id/edit_day0_tb"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="M"
+        android:textOff="M"
+        android:textOn="M"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editRouteDayTxt" />
+
+    <ToggleButton
+        android:id="@+id/edit_day1_tb"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:text="T"
+        android:textOff="T"
+        android:textOn="T"
+        app:layout_constraintEnd_toStartOf="@+id/edit_day2_tb"
+        app:layout_constraintHorizontal_bias="0.058"
+        app:layout_constraintStart_toEndOf="@+id/edit_day0_tb"
+        app:layout_constraintTop_toBottomOf="@+id/editRouteDayTxt"/>
+
+    <ToggleButton
+        android:id="@+id/edit_day6_tb"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:text="S"
+        android:textOff="S"
+        android:textOn="S"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editRouteDayTxt" />
+
+    <ToggleButton
+        android:id="@+id/edit_day5_tb"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:text="S"
+        android:textOff="S"
+        android:textOn="S"
+        app:layout_constraintEnd_toStartOf="@+id/edit_day6_tb"
+        app:layout_constraintTop_toBottomOf="@+id/editRouteDayTxt"/>
+
+    <ToggleButton
+        android:id="@+id/edit_day4_tb"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:text="F"
+        android:textOff="F"
+        android:textOn="F"
+        app:layout_constraintEnd_toStartOf="@+id/edit_day5_tb"
+        app:layout_constraintTop_toBottomOf="@+id/editRouteDayTxt"/>
+
+    <ToggleButton
+        android:id="@+id/edit_day3_tb"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:text="T"
+        android:textOff="T"
+        android:textOn="T"
+        app:layout_constraintEnd_toStartOf="@+id/edit_day4_tb"
+        app:layout_constraintTop_toBottomOf="@+id/editRouteDayTxt" />
+
+    <ToggleButton
+        android:id="@+id/edit_day2_tb"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:text="W"
+        android:textOff="W"
+        android:textOn="W"
+        app:layout_constraintEnd_toStartOf="@+id/edit_day3_tb"
+        app:layout_constraintTop_toBottomOf="@+id/editRouteDayTxt" />
+
+    <Button
+        android:id="@+id/editSaveBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_day3_tb" />
+
+    <TimePicker
+        android:id="@+id/timePicker"
+        android:layout_width="wrap_content"
+        android:layout_height="135dp"
+        android:layout_marginTop="8dp"
+        android:timePickerMode="spinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editRouteTimeTxt" />
+
+
+</android.support.constraint.ConstraintLayout>
