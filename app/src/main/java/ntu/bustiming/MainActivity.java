@@ -1,5 +1,6 @@
 package ntu.bustiming;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
@@ -11,7 +12,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -66,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     GoogleMap gMap;
     ListView lv_favorites;
     JSONArray BusStop_list;
+    EditText EditText1;
+    public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
+
 
 
     /**
@@ -126,6 +135,23 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
             });
         }
     setUpBusStopList();
+        EditText1 = (EditText) findViewById(R.id.et_search);
+
+        EditText1.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    Log.d("Done","Done is pressed");
+                    Intent intent = new Intent(MainActivity.this, SearchableActivity.class);
+                    String message = EditText1.getText().toString();
+                    intent.putExtra(EXTRA_MESSAGE, message);
+                    startActivity(intent);
+                    handled = true;
+                }
+                return handled;
+            }
+        });
     }
 
     /**
