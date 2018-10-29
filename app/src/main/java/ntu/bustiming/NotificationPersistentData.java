@@ -1,36 +1,34 @@
 package ntu.bustiming;
 
-import android.content.ContentProvider;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.BitSet;
 
-public class RoutePersistentData {
+public class NotificationPersistentData {
     private JSONArray entryList;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
     Context context;
     private final String key = "data";
-    private static RoutePersistentData instance;
+    private static NotificationPersistentData instance;
 
     public static void init(Context context){
         if(instance==null){
-            instance = new RoutePersistentData(context);
+            instance = new NotificationPersistentData(context);
         }
     }
 
-    public static RoutePersistentData getInstance(){
+    public static NotificationPersistentData getInstance(){
         return instance;
     }
 
-    private RoutePersistentData(Context context) {
+    private NotificationPersistentData(Context context) {
         this.context = context;
         entryList = new JSONArray();
         try {

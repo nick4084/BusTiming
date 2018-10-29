@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
-import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,14 +18,14 @@ import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
-public class RouteAdapter extends BaseAdapter{
+public class NotificationBaseAdapter extends BaseAdapter{
     //how to write adapter
     //https://abhiandroid.com/ui/baseadapter-tutorial-example.html
     //this is better https://www.journaldev.com/10416/android-listview-with-custom-adapter-example-tutorial
     private ArrayList<Notification> routeList;
     private Context context;
-    private static RouteAdapter instance = null;
-    private static RoutePersistentData routePersistentData;
+    private static NotificationBaseAdapter instance = null;
+    private static NotificationPersistentData notificationPersistentData;
 
 
     private static class ViewHolder {
@@ -38,18 +37,18 @@ public class RouteAdapter extends BaseAdapter{
 
     public static void init(ArrayList<Notification> routeList, Context context){
         if(instance==null){
-            instance = new RouteAdapter(routeList,context);
+            instance = new NotificationBaseAdapter(routeList,context);
         }
     }
 
-    public static RouteAdapter getInstance(){
+    public static NotificationBaseAdapter getInstance(){
         return instance;
     }
 
-    private RouteAdapter(ArrayList<Notification> routeList, Context context) {
+    private NotificationBaseAdapter(ArrayList<Notification> routeList, Context context) {
         this.routeList = routeList;
         this.context = context;
-        routePersistentData = RoutePersistentData.getInstance();
+        notificationPersistentData = NotificationPersistentData.getInstance();
 
     }
 
@@ -102,14 +101,14 @@ public class RouteAdapter extends BaseAdapter{
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch(menuItem.getItemId()){
                             case R.id.routeMenuEdit:
-                                RouteEditDialog editDialog = new RouteEditDialog(context, routeList.get(position), position);
+                                NotificationEditDialog editDialog = new NotificationEditDialog(context, routeList.get(position), position);
                                 editDialog.show();
-                                editDialog.setDialogResult(new RouteEditDialog.OnMyDialogResult(){
+                                editDialog.setDialogResult(new NotificationEditDialog.OnMyDialogResult(){
                                     public void finish(Notification ntf){
                                         //TODO: Use singleton here
-                                        RouteAdapter routeAdapter = RouteAdapter.getInstance();
-                                        routeAdapter.replaceItem(ntf,position);
-                                        routeAdapter.notifyDataSetChanged();
+                                        NotificationBaseAdapter notificationBaseAdapter = NotificationBaseAdapter.getInstance();
+                                        notificationBaseAdapter.replaceItem(ntf,position);
+                                        notificationBaseAdapter.notifyDataSetChanged();
                                     }
                                 });
                                 return true;
@@ -146,7 +145,7 @@ public class RouteAdapter extends BaseAdapter{
     @Override
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
-        routePersistentData.refreshList(routeList);
+        notificationPersistentData.refreshList(routeList);
         //TODO: Loop through the items, set alarm manager
         NotificationManager notificationManager;
         final int NOTIFICATION_ID = 0;

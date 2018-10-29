@@ -3,6 +3,9 @@ package ntu.bustiming;
 import java.sql.Time;
 import java.util.BitSet;
 
+/**
+ * This class is an entity class for notification
+ */
 public class Notification {
     private int id;
     private String name;
@@ -87,6 +90,11 @@ public class Notification {
         return ""+ntf_hour+":"+ntf_minute;
     }
 
+
+    /**
+     * This method converts the bitset into a string that contains the days in a week
+     * @return The string that contains the days in a week
+     */
     public String displayDays(){
         String result="";
         for(int i=0;i<7;i++){
