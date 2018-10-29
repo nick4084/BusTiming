@@ -9,7 +9,15 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+/**
+ * This class is a service object that has pre-defined variables.
+ * Handles the service lifecycle
+ * Contain a nested LocationListener Class.
+ */
 public class GPS extends Service {
+    /**
+     * Default constructor
+     */
     public GPS() {
     }
 
@@ -18,16 +26,28 @@ public class GPS extends Service {
     private static final int LOCATION_INTERVAL = 1000;
     private static final float LOCATION_DISTANCE = 10f;
 
+    /**
+     * Nested class that implements LocationListener
+     * Used only by class GPS
+     */
     private class LocationListener implements android.location.LocationListener
     {
         Location mLastLocation;
 
+        /**
+         * Constructor
+         * @param provider string name of provider
+         */
         public LocationListener(String provider)
         {
             Log.e(TAG, "LocationListener " + provider);
             mLastLocation = new Location(provider);
         }
 
+        /**
+         * Must Impelement this method that listen to changes in location
+         * @param location object that has longitude and latitude
+         */
         @Override
         public void onLocationChanged(Location location)
         {
@@ -73,6 +93,10 @@ public class GPS extends Service {
         return START_STICKY;
     }
 
+    /**
+     * Must Lmplement this method
+     * Called when the class is instantiated
+     */
     @Override
     public void onCreate()
     {
@@ -98,6 +122,10 @@ public class GPS extends Service {
         }
     }
 
+    /**
+     * Must implement this method
+     * Handles the destruction lifecycle of this class
+     */
     @Override
     public void onDestroy()
     {

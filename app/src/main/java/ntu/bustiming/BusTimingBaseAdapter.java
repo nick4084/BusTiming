@@ -21,9 +21,8 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- * API V4.6 19mar 2018
+ * This class is the adapter to generate the bus timing item UI
  */
-
 public class BusTimingBaseAdapter extends BaseAdapter {
     Context mcontext;
     LayoutInflater mInflater;
@@ -55,17 +54,31 @@ public class BusTimingBaseAdapter extends BaseAdapter {
     String GAS_Transport_operator_code = "GAS";
     String param_wab = "WAB";
 
+    /**
+     * Constructor for the base adapter
+     * @param context Application context
+     * @param bus_timing_array The data source for the bus timing
+     */
     public BusTimingBaseAdapter(Context context, JSONArray bus_timing_array) {
         mcontext = context;
         mInflater = LayoutInflater.from(context);
         mBus_Timing_JSONArray = bus_timing_array;
     }
 
+    /**
+     * get the data source's size count
+     * @return int length of bus timing
+     */
     @Override
     public int getCount() {
         return mBus_Timing_JSONArray.length();
     }
 
+    /**
+     * return an object of the row
+     * @param i int position of the row to return
+     * @return an object of row specified
+     */
     @Override
     public Object getItem(int i) {
         try {
@@ -77,6 +90,11 @@ public class BusTimingBaseAdapter extends BaseAdapter {
 
     }
 
+    /**
+     * return item id of row
+     * @param i integer of row
+     * @return long integer of the row
+     */
     @Override
     public long getItemId(int i) {
         long Id = 0;
@@ -90,6 +108,13 @@ public class BusTimingBaseAdapter extends BaseAdapter {
         return Id;
     }
 
+    /**
+     * setup each row's UI based on the number of bus timing
+     * @param i int row
+     * @param view
+     * @param viewGroup
+     * @return
+     */
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
@@ -187,13 +212,26 @@ public class BusTimingBaseAdapter extends BaseAdapter {
     }
 
 
-
+    /**
+     * sets the wab icon
+     * @param imageview imageview to set
+     * @param Feature string value that determine if its WAB accessible
+     */
     public void setWAB(ImageView imageview, String Feature) {
         if (Feature.equals(param_wab)) {
             imageview.setImageResource(R.drawable.wab);
         }
     }
 
+    /**
+     * set the load icon of the bus. 3 states available
+     * Available
+     * Standing
+     * Limited standing
+     * @param imageview imageview to set
+     * @param Occupancy string occupancy of the bus
+     * @param Type bus string type
+     */
     public void setbusTypeandLoad(ImageView imageview, String Occupancy, String Type) {
         if (imageview != null && Occupancy != "" && Type != "") {
 
@@ -207,6 +245,11 @@ public class BusTimingBaseAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * set bus timing text
+     * @param textviewtiming textview to set
+     * @param EstArrival arrival text to set
+     */
     public void setbusTiming(TextView textviewtiming, String EstArrival) {
         if (textviewtiming != null && EstArrival != "") {
             //String Mockdate = "2017-06-27T02:47:19+08:00";
@@ -244,11 +287,22 @@ public class BusTimingBaseAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     * get the bus stop's name using the bus stop code
+     * @param DestinationCode bus stop code
+     * @return name of the bus stop
+     */
     public String getDestinationNameByCode(String DestinationCode) {
         BusStops bs = new BusStops(mcontext);
         return bs.getDestinationNameByCode(DestinationCode);
     }
 
+    /**
+     * remove the UI of the bus timing container and display desired message
+     * @param llyContainer container of the UI
+     * @param viewgroup collection of view
+     * @param Display_Message message to display
+     */
     public void removeContainerItem(LinearLayout llyContainer, ViewGroup viewgroup, String Display_Message) {
         //remove all child of lly
         int number_of_child_to_remove = llyContainer.getChildCount();
@@ -265,6 +319,9 @@ public class BusTimingBaseAdapter extends BaseAdapter {
         llyContainer.addView(tv_not_in_operation);
     }
 
+    /**
+     * holds the view of item for the view for more efficient application
+     */
     static class ViewHolder {
         TextView tv_busserviceno;
         TextView tv_nextbustiming;

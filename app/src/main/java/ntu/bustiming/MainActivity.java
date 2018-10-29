@@ -34,6 +34,10 @@ import org.json.JSONObject;
 import static ntu.bustiming.BusStops.Param_busstop_code;
 import static ntu.bustiming.BusStops.Param_roadname;
 
+/**
+ * This is Initialized when the user launch this application.
+ * It holds all the Fragments by the sliding tab layout
+ */
 public class MainActivity extends AppCompatActivity implements FavoriteFragment.OnFragmentInteractionListener,
         RouteFragment.OnFragmentInteractionListener,
         NearbyFragment.OnFragmentInteractionListener,
@@ -64,8 +68,12 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     JSONArray BusStop_list;
 
 
-
-
+    /**
+     * called when this Activity is instantiated
+     * set the content's view.
+     * Initialize the TabLayout, GPS Location
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,11 +128,19 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     setUpBusStopList();
     }
 
+    /**
+     * get an instance of the list of busstop.
+     */
     public void setUpBusStopList(){
         BusStops bs_data = new BusStops(this);
         BusStop_list  = bs_data.readBusStopfile();
     }
 
+    /**
+     * get bus stop road by the bus stop code
+     * @param code Bus stop code
+     * @return Bus stop name
+     */
     public String getBusStopRdByCode(String code){
         if(BusStop_list==null){
             setUpBusStopList();
@@ -145,6 +161,10 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
         return "";
     }
 
+    /**
+     * check if the user allowed the location permission
+     * @return true if user granted permission
+     */
     public boolean checkLocationPermission() {
         String permission = "android.permission.ACCESS_FINE_LOCATION";
         int res = this.checkCallingOrSelfPermission(permission);
@@ -176,6 +196,12 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
             }
         }
     }
+
+    /**
+     * This method setup the GoogleAPIClient
+     * Only allow single invokcation of this method.
+     * Any subsequent invocation will be suspended
+     */
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -184,6 +210,10 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
                 .build();
     }
 
+    /**
+     * Must Implement this method
+     * @param bundle name-value pair passed to this method
+     */
     @Override
     public void onConnected(Bundle bundle) {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED) {
@@ -192,6 +222,10 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
     }
+
+    /**
+     * Instantiate a new Location request
+     */
     public void createLocationRequest(){
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(10000);
@@ -205,6 +239,11 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {}
 
+    /**
+     * Must Implement this method
+     * Observe the Location value and called when the location is changed
+     * @param location
+     */
     @Override
     public void onLocationChanged(Location location)
     {
@@ -228,6 +267,12 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
 
     }
 
+    /**
+     * Check the device OS and check permission if version is greater that M
+     * Enable map location
+     * @param map
+     * @return
+     */
     public GoogleMap setUpMap(GoogleMap map){
         //Check permission.
         gMap = map;
@@ -248,6 +293,9 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
         return map;
     }
 
+    /**
+     * This method add Marker of bus stop to google map by longitude and latitude
+     */
     public void addBusStopToMap(){
         if(busStops_Class ==null){
             busStops_Class =new BusStops(this);
@@ -273,10 +321,22 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
         }
     }
 
+    /**
+     * Display the bus arrival timing dialog
+     * @param busTiming bus arrival timing
+     * @param BusStopCode bus stop code
+     * @param BusStopDescription bus stop description
+     * @param lat latitude of bus stop
+     * @param lng longitude of bus stop
+     */
     public void displayBusTiming(JSONObject busTiming, String BusStopCode, String BusStopDescription, double lat, double lng){
         //display bus timing dialog pop up
         String road = getBusStopRdByCode(BusStopCode);
         BusTimingDialog TimingDialog = new BusTimingDialog(this, busTiming, BusStopCode, BusStopDescription, lat, lng, road,  new BusTimingDialog.OnDialogClickListener(){
+            /**
+             * Must Implement method
+             * Observer will call this method when Favorite fragment is changed
+             */
             @Override
             public void notifyFavoriteDataChange() {
                 FavoriteFragment f = (FavoriteFragment) adapter.getItem(1);
@@ -288,10 +348,17 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
 
     }
 
+    /**
+     * Must Implement method
+     * @param uri uri
+     */
     @Override
     public void onBookmarkFragmentInteraction(Uri uri) {
 
     }
+    /**
+     * Must Implement method
+     */
     @Override
     public void onNearbyFragmentInteraction() {
         adapter.getItem(1);

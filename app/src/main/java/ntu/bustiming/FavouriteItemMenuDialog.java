@@ -14,6 +14,9 @@ import android.widget.ListView;
 
 import org.json.JSONArray;
 
+/**
+ * This Class is a dialog controller which control the display of the Favorite Dialog
+ */
 public class FavouriteItemMenuDialog extends Dialog implements DialogInterface.OnClickListener{
     Context mcontext;
     String name;
@@ -24,11 +27,24 @@ public class FavouriteItemMenuDialog extends Dialog implements DialogInterface.O
     public interface OnDialogClickListener {
         void onSaveClicked();
     }
+
+    /**
+     * The class must implement this method
+     * @param dialogInterface
+     * @param i
+     */
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
 
     }
 
+    /**
+     * Constructor method. Initialize the parameters
+     * @param context application context
+     * @param code bus stop code
+     * @param name bus stop name
+     * @param listener Observer
+     */
     public FavouriteItemMenuDialog(@NonNull Context context, int code, String name, OnDialogClickListener listener) {
         super(context);
         mcontext = context;
@@ -38,6 +54,11 @@ public class FavouriteItemMenuDialog extends Dialog implements DialogInterface.O
 
     }
 
+    /**
+     * called when this class is Instantiated
+     * set the UI and initialize the UI components
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +69,10 @@ public class FavouriteItemMenuDialog extends Dialog implements DialogInterface.O
         pname.setText(name);
         Button cancel = findViewById(R.id.btnFavouriteMenuCancel);
         cancel.setOnClickListener(new View.OnClickListener() {
+            /**
+             * close the pop up
+             * @param view UI
+             */
             @Override
             public void onClick(View view) {
                 dismiss();
@@ -56,6 +81,11 @@ public class FavouriteItemMenuDialog extends Dialog implements DialogInterface.O
         });
         Button save = findViewById(R.id.btnFavouriteMenuSavebtn);
         save.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Handes the saving of favorite bus stop personalised name.
+             * notify the observer subscribed to this that data had changed
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 String new_pname = pname.getText().toString();
