@@ -1,52 +1,33 @@
 package ntu.bustiming;
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-
-import static android.content.Context.LOCATION_SERVICE;
 
 public class NearbyFragment extends Fragment implements OnMapReadyCallback {
     // TODO: Rename parameter arguments, choose names that match
@@ -141,10 +122,16 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
                         if (marker.getTitle().toString() != "You") {
-                            String BusStopCode = marker.getTitle().substring(marker.getTitle().lastIndexOf("(") + 1, marker.getTitle().length() - 1);
-                            String BusStopDescription = marker.getTitle().substring(0, marker.getTitle().lastIndexOf("(") - 1);
-                            setUpAndDisplayBusTiming(BusStopCode, BusStopDescription, marker.getPosition().latitude, marker.getPosition().longitude);
+                            try {
+                                String BusStopCode = marker.getTitle().substring(marker.getTitle().lastIndexOf("(") + 1, marker.getTitle().length() - 1);
+                                String BusStopDescription = marker.getTitle().substring(0, marker.getTitle().lastIndexOf("(") - 1);
+                                setUpAndDisplayBusTiming(BusStopCode, BusStopDescription, marker.getPosition().latitude, marker.getPosition().longitude);
+                            }catch(Exception e){
+                                e.printStackTrace();
+                                return false;
+                            }
                         }
+
                         return false;
                     }
                 });
@@ -152,8 +139,8 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
         }
     }
     public void setUpAndDisplayBusTiming(String Busstop_code, String Busstop_description, double lat, double lng){
-        LTA_API LTA_API = new LTA_API(this.getContext());
-        JSONObject bus_arrival_timing = LTA_API.getBusArrivalByBusStopCode(Busstop_code);
+        LTADatamallController LTADatamallController = new LTADatamallController(this.getContext());
+        JSONObject bus_arrival_timing = LTADatamallController.getBusArrivalByBusStopCode(Busstop_code);
         if(bus_arrival_timing!=null){
             //display bus timing
             try {
@@ -166,8 +153,8 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void CheckBusStopFile(){
-            LTA_API api = new LTA_API(this.getContext());
-            File BusStop_file = new File(getContext().getFilesDir(), "BusTiming/BusStop.txt");
+            LTADatamallController api = new LTADatamallController(this.getContext());
+            File BusStop_file = new File(getContext().getFilesDir(), "BusTiming/BusStops.txt");
             if (BusStop_file.exists()) {
                 try {
                     //check total bus stop count is the same

@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -14,15 +13,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.zip.Inflater;
-
 public class FavoritesBaseAdapter extends BaseAdapter {
     private Context mContext;
     private JSONArray Busstop_list;
     private LayoutInflater mInflater;
     ListView lv_parent;
     FavoritesBaseAdapter mAdapter;
-    FavoritePersistentData data;
+    FavoriteDataController data;
+    FavoriteBusStopStruct f_struct;
     public FavoritesBaseAdapter(JSONArray busstop_list, Context context){
         this.mContext = context;
         this.Busstop_list = busstop_list;
@@ -51,7 +49,8 @@ public class FavoritesBaseAdapter extends BaseAdapter {
     @Override
     public long getItemId(int i) {
         try {
-            return Long.parseLong(Busstop_list.getJSONObject(i).get(FavoriteBusStopStruct.PARAM_CODE).toString());
+            FavoriteBusStopStruct item = new FavoriteBusStopStruct(Busstop_list.getJSONObject(i));
+            return Long.parseLong(Integer.toString(item.getBusstop_code()));
         } catch(JSONException e){
             e.printStackTrace();
             return 0;
@@ -67,7 +66,7 @@ public class FavoritesBaseAdapter extends BaseAdapter {
     }
 
     public void refresh(){
-            data = new FavoritePersistentData(mContext);
+            data = new FavoriteDataController(mContext);
             Busstop_list = data.getLikedBusstop();
     }
 
@@ -96,9 +95,13 @@ public class FavoritesBaseAdapter extends BaseAdapter {
         }
         try{
             JSONObject current_busstop = Busstop_list.getJSONObject(i);
-            final int code = current_busstop.getInt(FavoriteBusStopStruct.PARAM_CODE);
-            final String bs_name = current_busstop.get(FavoriteBusStopStruct.PARAM_PNAME).toString();
-            final String bus_stop_road = current_busstop.get(FavoriteBusStopStruct.PARAM_RD).toString();
+            f_struct = new FavoriteBusStopStruct(current_busstop);
+            //final int code = current_busstop.getInt(FavoriteBusStopStruct.PARAM_CODE);
+            //final String bs_name = current_busstop.get(FavoriteBusStopStruct.PARAM_PNAME).toString();
+            //final String bus_stop_road = current_busstop.get(FavoriteBusStopStruct.PARAM_RD).toString();
+            final int code = f_struct.getBusstop_code();
+            final String bs_name = f_struct.getBusstop_personalised_name();
+            final String bus_stop_road = f_struct.getBusstop_rd();
             view_item.tv_favorite_busstop_name.setText(bs_name);
             view_item.tv_hidden_code.setText(Integer.toString(code));
             view_item.tv_favourite_busstop_road.setText(bus_stop_road);
@@ -128,9 +131,9 @@ public class FavoritesBaseAdapter extends BaseAdapter {
             view_item.ib_favourite_busstop_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FavoritePersistentData data = new FavoritePersistentData(mContext);
+                    FavoriteDataController data = new FavoriteDataController(mContext);
                     data.deleteFavoriteByCode(code);
-                    removeDataBypos(view_item.position);
+                    //removeDataBypos(view_item.position);
                     refresh();
                     notifyDataSetChanged();
                 }

@@ -1,20 +1,18 @@
 package ntu.bustiming;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,6 +56,7 @@ public BusTimingDialog(@NonNull Context context, JSONObject BusTimingJSON, Strin
         TextView Tv_Description = (TextView)findViewById(R.id.tv_bustiming_description);
         TextView Tv_Code = (TextView)findViewById(R.id.tv_bustiming_code);
         CheckBox cb_favorite = (CheckBox)findViewById(R.id.busTimingLikeIcon);
+        ImageView iv_weather_icon = findViewById(R.id.iv_weather_icon);
         Tv_Description.setText(mbusStopDescription);
         Tv_Code.setText(mbusStopCode);
 
@@ -68,7 +67,7 @@ public BusTimingDialog(@NonNull Context context, JSONObject BusTimingJSON, Strin
         } catch(JSONException ex){
         ex.printStackTrace();
         }
-        final FavoritePersistentData data = new FavoritePersistentData(mcontext);
+        final FavoriteDataController data = new FavoriteDataController(mcontext);
         cb_favorite.setChecked(data.checkIfFavorite(Integer.parseInt(mbusStopCode)));
             cb_favorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -84,21 +83,24 @@ public BusTimingDialog(@NonNull Context context, JSONObject BusTimingJSON, Strin
         lv_bustiming.setAdapter(new BusTimingBaseAdapter(mcontext, jsonarray_bustiming));
         lv_bustiming.setEmptyView(findViewById(R.id.tv_bustiming_empty));
         lv_bustiming.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-@Override
-public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if(view.getId()!= 0){
-        TextView tv_bus_svc = (TextView) view.findViewById(R.id.tv_bustiming_serviceno);
-        String Bus_Svc = tv_bus_svc.getText().toString();
-        try {
-
-
-
-        } catch (Exception e){
-        e.printStackTrace();
-        }
-        }
-        }
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if(view.getId()!= 0){
+                    TextView tv_bus_svc = (TextView) view.findViewById(R.id.tv_bustiming_serviceno);
+                    String Bus_Svc = tv_bus_svc.getText().toString();
+                }
+            }
         });
+
+        //handles the weather api
+            WeatherController weather_controller = new WeatherController(mcontext);
+            weather_controller.get2HWeatherByLatLng(mLat, mLng, iv_weather_icon);
+            iv_weather_icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Toast.makeText(mcontext, "", Toast.LENGTH_LONG).show();
+                }
+            });
 
         }
 }

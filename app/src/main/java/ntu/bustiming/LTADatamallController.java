@@ -23,7 +23,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class LTA_API {
+public class LTADatamallController {
     String API_KEY= "yx6RmXTRhXhBAodoKDvWxQ==";
     String UNIQUE_USERID= "dc5eed1e-a2be-4323-aa3e-eb9680180eb2";
     String API_URL="http://datamall2.mytransport.sg/ltaodataservice/";
@@ -37,7 +37,7 @@ public class LTA_API {
     String ACCEPT_HEADER="application/json";
     Context mContext;
 
-    public LTA_API(Context mContext){
+    public LTADatamallController(Context mContext){
     this.mContext = mContext;
     }
     public JSONObject SingleBusArrivalTiming(String BUS_SERVICE, String BUSSTOP_ID){
@@ -139,7 +139,7 @@ public class LTA_API {
             if (!path.exists()) {
                 path.mkdir();
             }
-            File fw = new File(path, "BusStop.txt");
+            File fw = new File(path, "BusStops.txt");
             output = new BufferedWriter(new FileWriter(fw, false));
             output.write(dataToFile.toString());
             output.close();

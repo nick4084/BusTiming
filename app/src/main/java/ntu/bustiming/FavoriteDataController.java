@@ -21,11 +21,11 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
-public class FavoritePersistentData {
+public class FavoriteDataController {
     private JSONArray LikedBusstop;
     Context mContext;
 
-    public FavoritePersistentData(Context context) {
+    public FavoriteDataController(Context context) {
         mContext = context;
         LikedBusstop = fetchFavoriteBusStop();
     }
@@ -45,6 +45,7 @@ public class FavoritePersistentData {
                     }
                 JSONArray jsonraw = new JSONArray(total.toString());
                 return jsonraw;
+                //return new JSONArray(); //uncomment this line, run and like a b/s will clear off favorite.txt
         } catch (IOException e) {
             e.printStackTrace();
             Log.i("readBusStopfile", "I/O error");
@@ -56,34 +57,23 @@ public class FavoritePersistentData {
     }
 
     public boolean insertFavoriteBusStop(int code, String Desc, String personalised_name, double lat, double lng, String road) {
-        try {
             if (code != 0) {
-                JSONObject newFavorite = new JSONObject();
-                newFavorite.put(FavoriteBusStopStruct.PARAM_CODE, code);
-                newFavorite.put(FavoriteBusStopStruct.PARAM_DESC, Desc);
-                newFavorite.put(FavoriteBusStopStruct.PARAM_LAT, lat);
-                newFavorite.put(FavoriteBusStopStruct.PARAM_LNG, lng);
-                newFavorite.put(FavoriteBusStopStruct.PARAM_PNAME, personalised_name);
-                newFavorite.put(FavoriteBusStopStruct.PARAM_RD, road);
-                LikedBusstop.put(newFavorite);
+                FavoriteBusStopStruct fbst = new FavoriteBusStopStruct(code, Desc, Desc, lat, lng, road);
+                LikedBusstop.put(fbst.getFavoriteBusStopJSONObject());
                 saveFavoriteBusStop();
                 return true;
             } else {
                 return false;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     public boolean deleteFavoriteByCode(int busstop_code) {
         try {
             for (int i = 0; i < LikedBusstop.length(); i++) {
-                JSONObject current = LikedBusstop.getJSONObject(i);
-                int current_code = Integer.parseInt(current.get(FavoriteBusStopStruct.PARAM_CODE).toString());
+                FavoriteBusStopStruct current = new FavoriteBusStopStruct(LikedBusstop.getJSONObject(i));
+                int current_code = current.getBusstop_code();
                 if (current_code == busstop_code) {
-                    LikedBusstop.remove(i);
+                    removeFromFavoriteBusstopList(i);
                     saveFavoriteBusStop();
                     return true;
                 }
@@ -93,11 +83,14 @@ public class FavoritePersistentData {
         }
         return false;
     }
+    public void removeFromFavoriteBusstopList(int index){
+        LikedBusstop.remove(index);
+    }
     public boolean checkIfFavorite(int code){
         try {
             for (int i = 0; i < LikedBusstop.length(); i++) {
-                JSONObject current = LikedBusstop.getJSONObject(i);
-                int current_code = Integer.parseInt(current.get(FavoriteBusStopStruct.PARAM_CODE).toString());
+                FavoriteBusStopStruct current = new FavoriteBusStopStruct(LikedBusstop.getJSONObject(i));
+                int current_code = current.getBusstop_code();
                 if (current_code == code) {
                     return true;
                 }
@@ -112,11 +105,14 @@ public class FavoritePersistentData {
     public boolean editFavoritePersonalisedNameByCode(int busstop_code, String new_name) {
         try {
             for (int i = 0; i < LikedBusstop.length(); i++) {
-                JSONObject current = LikedBusstop.getJSONObject(i);
-                int current_code = Integer.parseInt(current.get(FavoriteBusStopStruct.PARAM_CODE).toString());
+                FavoriteBusStopStruct current = new FavoriteBusStopStruct(LikedBusstop.getJSONObject(i));
+                int current_code = current.getBusstop_code();
                 if (current_code == busstop_code) {
-                    LikedBusstop.getJSONObject(i).remove(FavoriteBusStopStruct.PARAM_PNAME);
-                    LikedBusstop.getJSONObject(i).put(FavoriteBusStopStruct.PARAM_PNAME, new_name);
+                    //LikedBusstop.getJSONObject(i).remove(FavoriteBusStopStruct.PARAM_PNAME);
+                    //LikedBusstop.getJSONObject(i).put(FavoriteBusStopStruct.PARAM_PNAME, new_name);
+                    current.setBusstop_personalised_name(new_name);
+                    LikedBusstop.remove(i);
+                    LikedBusstop.put(current.getFavoriteBusStopJSONObject());
                     saveFavoriteBusStop();
                     return true;
                 }

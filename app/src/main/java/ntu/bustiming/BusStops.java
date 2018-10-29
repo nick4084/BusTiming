@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class BusStop {
+public class BusStops {
     JSONArray AllBusStop;
     Context mContext;
     Double range =0.01;
@@ -29,7 +29,7 @@ public class BusStop {
 
 
 
-    public BusStop(Context context) {
+    public BusStops(Context context) {
         mContext = context;
     }
 
@@ -113,7 +113,7 @@ public class BusStop {
 
     public JSONArray readBusStopfile(){
         try {
-            File path = new File(mContext.getFilesDir(), "BusTiming/BusStop.txt");
+            File path = new File(mContext.getFilesDir(), "BusTiming/BusStops.txt");
             StringBuilder total = new StringBuilder();
             FileInputStream fis = new FileInputStream(path);
             int numRead =0;

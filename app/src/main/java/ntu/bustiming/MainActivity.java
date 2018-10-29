@@ -6,30 +6,20 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.drive.Drive;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -41,9 +31,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static ntu.bustiming.BusStop.Param_busstop_code;
-import static ntu.bustiming.BusStop.Param_description;
-import static ntu.bustiming.BusStop.Param_roadname;
+import static ntu.bustiming.BusStops.Param_busstop_code;
+import static ntu.bustiming.BusStops.Param_roadname;
 
 public class MainActivity extends AppCompatActivity implements FavoriteFragment.OnFragmentInteractionListener,
         RouteFragment.OnFragmentInteractionListener,
@@ -63,11 +52,12 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     Marker mCurrLocationMarker;
     ViewPagerAdapter adapter;
     Location mLastLocation;
+    Location mCurrentLocation;
     SlidingTabLayout tabs;
     CharSequence Titles[] = {"Nearby", "Favorite", "Route"};
     int NumbOfTabs = 3;
     GoogleApiClient mGoogleApiClient;
-    BusStop busStop_Class= null;
+    BusStops busStops_Class = null;
     private FusedLocationProviderClient mFusedLocationClient;
     GoogleMap gMap;
     ListView lv_favorites;
@@ -80,7 +70,8 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        createLocationRequest();
+        buildGoogleApiClient();
         adapter =  new ViewPagerAdapter(getSupportFragmentManager(), Titles, NumbOfTabs, getApplicationContext());
         // Assigning ViewPager View and setting the adapter
         pager = (ViewPager) findViewById(R.id.pager);
@@ -130,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     }
 
     public void setUpBusStopList(){
-        BusStop bs_data = new BusStop(this);
+        BusStops bs_data = new BusStops(this);
         BusStop_list  = bs_data.readBusStopfile();
     }
 
@@ -159,14 +150,30 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
         int res = this.checkCallingOrSelfPermission(permission);
         return (res == PackageManager.PERMISSION_GRANTED);
     }
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+            mGoogleApiClient.connect();
+    }
+    protected void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+    }
     @Override
     public void onPause() {
         super.onPause();
-
         //stop location updates when Activity is no longer active
-        if (mGoogleApiClient != null) {
+        if (mGoogleApiClient != null&& mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        }
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mGoogleApiClient.isConnected()) {
+            if (mGoogleApiClient != null && checkLocationPermission()) {
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+            }
         }
     }
     protected synchronized void buildGoogleApiClient() {
@@ -175,18 +182,21 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        mGoogleApiClient.connect();
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(1000);
-        mLocationRequest.setFastestInterval(1000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED) {
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            mCurrentLocation = mLastLocation;
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
+    }
+    public void createLocationRequest(){
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
     }
 
     @Override
@@ -225,12 +235,12 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
             //Initialize Google Play Services
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED) {
-                    buildGoogleApiClient();
+                    //buildGoogleApiClient();
                     map.setMyLocationEnabled(true);
 
                 }
             } else{
-                buildGoogleApiClient();
+                //buildGoogleApiClient();
                 map.setMyLocationEnabled(true);
             }
         }
@@ -239,11 +249,11 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     }
 
     public void addBusStopToMap(){
-        if(busStop_Class==null){
-            busStop_Class=new BusStop(this);
+        if(busStops_Class ==null){
+            busStops_Class =new BusStops(this);
         }
         try{
-            JSONArray busstopArray = busStop_Class.getBusStopByLocation(mLastLocation);
+            JSONArray busstopArray = busStops_Class.getBusStopByLocation(mLastLocation);
             if(busstopArray!=null) {
                 for (int i = 0; i < busstopArray.length(); i++) {
                     JSONObject busstopObject = busstopArray.getJSONObject(i);

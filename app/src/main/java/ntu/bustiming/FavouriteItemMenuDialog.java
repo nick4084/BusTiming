@@ -1,28 +1,18 @@
 package ntu.bustiming;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextClock;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class FavouriteItemMenuDialog extends Dialog implements DialogInterface.OnClickListener{
     Context mcontext;
@@ -69,9 +59,9 @@ public class FavouriteItemMenuDialog extends Dialog implements DialogInterface.O
             @Override
             public void onClick(View v) {
                 String new_pname = pname.getText().toString();
-                FavoritePersistentData dataset = new FavoritePersistentData(mcontext);
+                FavoriteDataController dataset = new FavoriteDataController(mcontext);
                 dataset.editFavoritePersonalisedNameByCode(code, new_pname);
-                JSONArray new_fav_list = dataset.fetchFavoriteBusStop();
+                //JSONArray new_fav_list = dataset.fetchFavoriteBusStop();
                 listener.onSaveClicked();
                 dismiss();
             }
