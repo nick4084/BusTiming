@@ -151,7 +151,7 @@ public class FavoriteBusStopStruct {
     }
     /**
      * setter method
-     * @return bus stop rd
+     * @param busstop_rd stop rd
      */
     public void setBusstop_rd(String busstop_rd) {
         this.busstop_rd = busstop_rd;

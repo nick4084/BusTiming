@@ -113,7 +113,7 @@ public class BusTimingBaseAdapter extends BaseAdapter {
      * @param i int row
      * @param view
      * @param viewGroup
-     * @return
+     * @return UI
      */
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {

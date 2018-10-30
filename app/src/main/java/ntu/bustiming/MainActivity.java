@@ -270,8 +270,8 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     /**
      * Check the device OS and check permission if version is greater that M
      * Enable map location
-     * @param map
-     * @return
+     * @param map ready map
+     * @return GoogleMap
      */
     public GoogleMap setUpMap(GoogleMap map){
         //Check permission.
