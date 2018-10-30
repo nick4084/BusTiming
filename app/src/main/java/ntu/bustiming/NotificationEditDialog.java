@@ -80,10 +80,9 @@ public class NotificationEditDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 save();
-
-
             }
         });
+
         if(ntf!=null){
             nameTxt.setText(ntf.getName());
             busstopNameTxt.setText(""+ntf.getBusstop_code());
@@ -99,7 +98,6 @@ public class NotificationEditDialog extends Dialog {
 
     }
 
-    //TODO: OnMydialogResult thing
     private void save() {
         Notification ntf = new Notification();
         if (TextUtils.isEmpty(nameTxt.getText().toString())) {
