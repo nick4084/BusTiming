@@ -1,0 +1,70 @@
+<!--UI for activity_main -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_weight="1"
+    android:background="@color/header_color"
+    tools:context=".MainActivity"
+    android:focusableInTouchMode="true"
+    android:elevation="2dp">
+    <LinearLayout
+        android:id="@+id/Search_bar"
+        android:elevation="2dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.15">
+
+
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_margin="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@android:drawable/ic_menu_search"
+            android:ems="10"
+            android:singleLine="true"
+            android:imeOptions="actionDone"
+            android:hint="Search for..." />
+
+        <TextView
+        android:id="@+id/firstLine"
+        android:layout_width="fill_parent"
+        android:layout_height="26dip"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:ellipsize="marquee"
+        android:text="Description"
+        android:textSize="16sp"
+        android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/secondLine"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/secondLine"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignWithParentIfMissing="true"
+            android:gravity="center_vertical"
+            android:text="Example application"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/thirdLine"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/secondLine"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignWithParentIfMissing="true"
+            android:gravity="center_vertical"
+            android:text="Example application"
+            android:textSize="12sp" />
+
+
+    </LinearLayout>
+</LinearLayout>
