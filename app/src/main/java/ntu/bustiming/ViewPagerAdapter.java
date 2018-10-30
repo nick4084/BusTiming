@@ -7,6 +7,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import org.json.JSONArray;
 
+/**
+ * This class is a page adapter that handles the pages attached to the sliding tab
+ */
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     CharSequence Titles[];
     int NumbOfTabs;
@@ -15,7 +18,13 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     FavoriteFragment tab2;
     RouteFragment tab3;
 
-
+    /**
+     * Cnnstructor method
+     * @param fm fragment manager instance
+     * @param mTitles array of tab titles
+     * @param mNumbOfTabsumb number of tabs
+     * @param mcontext applicaiton context
+     */
     public ViewPagerAdapter(FragmentManager fm, CharSequence mTitles[], int mNumbOfTabsumb, Context mcontext) {
         super(fm);
 
@@ -27,6 +36,11 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         tab3 = new RouteFragment();
     }
 
+    /**
+     * get the fragment instance by tab position
+     * @param position index
+     * @return fragment
+     */
     @Override
     public Fragment getItem(int position) {
         if(position == 0) // if the position is 0 we are returning the First tab
@@ -47,11 +61,20 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     }
     // This method return the titles for the Tabs in the Tab Strip
 
+    /**
+     * return the page title by tab index
+     * @param position index
+     * @return position
+     */
     @Override
     public CharSequence getPageTitle(int position) {
         return Titles[position];
     }
 
+    /**
+     * get the number of tabs
+     * @return number of tabs
+     */
     @Override
     public int getCount() {
         return NumbOfTabs;

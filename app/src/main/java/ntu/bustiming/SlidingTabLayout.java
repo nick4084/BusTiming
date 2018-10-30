@@ -16,6 +16,9 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * Defines the logic of the sliding tab
+ */
 public class SlidingTabLayout extends HorizontalScrollView {
     /**
      * Allows complete control over the colors drawn in the tab layout. Set with

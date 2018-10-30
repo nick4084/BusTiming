@@ -9,6 +9,9 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
 
+/**
+ * Defines the layout of sliding tab strip
+ */
 public class SlidingTabStrip extends LinearLayout {
 
 

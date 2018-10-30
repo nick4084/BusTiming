@@ -3,6 +3,9 @@ package ntu.bustiming;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * This class defines the data structure of favorite bus stop
+ */
 public class FavoriteBusStopStruct {
     private int busstop_code;
     private String busstop_description;
@@ -20,6 +23,10 @@ public class FavoriteBusStopStruct {
     public static String PARAM_RD = "road";
     public static String PARAM_OBJ = "favorite_busstop_struct";
 
+    /**
+     * Constructor method that can instantiate the attributes from a JSONObject
+     * @param busstop_obj JSONObject of favorite bus stop
+     */
     public FavoriteBusStopStruct(JSONObject busstop_obj){
         try {
             this.busstop_code = busstop_obj.getInt(PARAM_CODE);
@@ -33,6 +40,15 @@ public class FavoriteBusStopStruct {
         }
     }
 
+    /**
+     * Constructor method that instantiate
+     * @param busstop_code Bus stop code
+     * @param busstop_description Bus stop description
+     * @param busstop_personalised_name Bus Stop Personalised name
+     * @param busstop_lat Bus Stop latitude
+     * @param busstop_lng Bus stop Longitude
+     * @param busstop_rd
+     */
     public FavoriteBusStopStruct(int busstop_code, String busstop_description, String busstop_personalised_name, double busstop_lat, double busstop_lng, String busstop_rd) {
         this.busstop_code = busstop_code;
         this.busstop_description = busstop_description;
@@ -45,6 +61,9 @@ public class FavoriteBusStopStruct {
 
     }
 
+    /**
+     * generate a JSONObject of favorite bus stop data structure
+     */
     public void generateJSONObj(){
         try {
             busstop_obj = new JSONObject();
@@ -59,54 +78,88 @@ public class FavoriteBusStopStruct {
         }
     }
 
+    /**
+     * getter method
+     * @return bus stop
+     */
     public int getBusstop_code() {
         return busstop_code;
     }
-
+    /**
+     * setter method for bus stop code
+     */
     public void setBusstop_code(int busstop_code) {
         this.busstop_code = busstop_code;
     }
-
+    /**
+     * getter method
+     * @return bus stop
+     */
     public String getBusstop_description() {
         return busstop_description;
     }
-
+    /**
+     * setter method for bus stop latitude
+     */
     public void setBusstop_description(String busstop_description) {
         this.busstop_description = busstop_description;
     }
-
+    /**
+     * getter method
+     * @return bus stop
+     */
     public String getBusstop_personalised_name() {
         return busstop_personalised_name;
     }
-
+    /**
+     * setter method for bus stop personalised name
+     */
     public void setBusstop_personalised_name(String busstop_personalised_name) {
         this.busstop_personalised_name = busstop_personalised_name;
     }
-
+    /**
+     * getter method
+     * @return bus stop latitude
+     */
     public double getBusstop_Lat() {
         return busstop_Lat;
     }
-
+    /**
+     * setter method for bus stop latitude
+     */
     public void setBusstop_Lat(double busstop_Lat) {
         this.busstop_Lat = busstop_Lat;
     }
-
+    /**
+     * getter method
+     * @return bus stop longitude
+     */
     public double getBusstop_Lng() {
         return busstop_Lng;
     }
-
+    /**
+     * setter method for bus stop longitude
+     */
     public void setBusstop_Lng(double busstop_Lng) {
         this.busstop_Lng = busstop_Lng;
     }
-
+    /**
+     * setter method for bus stop road
+     */
     public String getBusstop_rd() {
         return busstop_rd;
     }
-
+    /**
+     * setter method
+     * @return bus stop rd
+     */
     public void setBusstop_rd(String busstop_rd) {
         this.busstop_rd = busstop_rd;
     }
-
+    /**
+     * getter method
+     * @return JSONObject of favorite bus stop data structure
+     */
     public JSONObject getFavoriteBusStopJSONObject(){
         if(busstop_obj == null){
             generateJSONObj();
