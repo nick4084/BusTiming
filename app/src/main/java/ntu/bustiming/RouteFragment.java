@@ -68,13 +68,16 @@ public class RouteFragment extends Fragment implements View.OnClickListener{
         Button addNewBtn = view.findViewById(R.id.addNewNotificationBtn);
         addNewBtn.setOnClickListener(this);
 
+        NS_BSBaseAdapter.init(getContext());
+        NS_BusBaseAdapter.init(getContext());
+
         listView = view.findViewById(R.id.notifyList);
-        //TODO: populate the data here
         NotificationPersistentData.init(getContext());
         notificationPersistentData = NotificationPersistentData.getInstance();
         routeList = notificationPersistentData.getEntryList();
         NotificationBaseAdapter.init(routeList, getContext());
         notificationBaseAdapter = NotificationBaseAdapter.getInstance();
+
         listView.setAdapter(notificationBaseAdapter);
         listView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
@@ -83,16 +86,9 @@ public class RouteFragment extends Fragment implements View.OnClickListener{
                         Notification ntf = routeList.get(i);
                         NotificationDisplayDialog displayDialog = new NotificationDisplayDialog(getContext(),routeList.get(i),i);
                         displayDialog.show();
-                        Log.d("test","item"+i+"clicked");
                     }
                 }
         );
-       /* Fragment routeListFragment = new RouteListFragment();
-        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.route_fragment_holder, routeListFragment);
-        fragmentTransaction.addToBackStack(null);
-
-        fragmentTransaction.commit();*/
         return view;
     }
 

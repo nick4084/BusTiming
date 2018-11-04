@@ -32,6 +32,7 @@ public class NotificationBaseAdapter extends BaseAdapter{
     private Context context;
     private static NotificationBaseAdapter instance = null;
     private static NotificationPersistentData notificationPersistentData;
+    private static int ntfCount = 0;
 
 
     /**
@@ -68,7 +69,7 @@ public class NotificationBaseAdapter extends BaseAdapter{
         this.routeList = routeList;
         this.context = context;
         notificationPersistentData = NotificationPersistentData.getInstance();
-
+        ntfCount = routeList.size();
     }
 
 
@@ -125,7 +126,6 @@ public class NotificationBaseAdapter extends BaseAdapter{
                                 editDialog.show();
                                 editDialog.setDialogResult(new NotificationEditDialog.OnMyDialogResult(){
                                     public void finish(Notification ntf){
-                                        //TODO: Use singleton here
                                         NotificationBaseAdapter notificationBaseAdapter = NotificationBaseAdapter.getInstance();
                                         notificationBaseAdapter.replaceItem(ntf,position);
                                         notificationBaseAdapter.notifyDataSetChanged();
