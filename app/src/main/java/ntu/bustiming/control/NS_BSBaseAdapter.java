@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,6 +12,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import ntu.bustiming.entity.*;
+import ntu.bustiming.R;
 
 public class NS_BSBaseAdapter extends BaseAdapter{
     private ArrayList<SimplifiedBusStop> bsList;

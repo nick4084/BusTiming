@@ -24,7 +24,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.BitSet;
 
-import ntu.bustiming.entity.Notification;
+import ntu.bustiming.entity.*;
 import ntu.bustiming.R;
 
 /**
@@ -95,7 +95,7 @@ public class NotificationEditDialog extends Dialog {
         busstopNameTxt.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                NotificationSearchDialog searchDialog = new NotificationSearchDialog(getContext(),NS_BSBaseAdapter.getInstance());
+                NotificationSearchDialog searchDialog = new NotificationSearchDialog(getContext(), NS_BSBaseAdapter.getInstance());
                 searchDialog.setDialogResult(new NotificationSearchDialog.OnMyDialogResult() {
                     @Override
                     public void finish(String result) {
