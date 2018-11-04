@@ -7,11 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 import android.support.v7.widget.PopupMenu;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -33,6 +35,7 @@ public class NotificationBaseAdapter extends BaseAdapter{
     private Context context;
     private static NotificationBaseAdapter instance = null;
     private static NotificationPersistentData notificationPersistentData;
+    private static int ntfCount = 0;
 
 
     /**
@@ -69,7 +72,7 @@ public class NotificationBaseAdapter extends BaseAdapter{
         this.routeList = routeList;
         this.context = context;
         notificationPersistentData = NotificationPersistentData.getInstance();
-
+        ntfCount = routeList.size();
     }
 
 
@@ -112,6 +115,7 @@ public class NotificationBaseAdapter extends BaseAdapter{
         final int position = i;
         viewHolder.ntf_name.setText(ntf.getName());
         viewHolder.ntf_onoff.setChecked(ntf.isActivated());
+        //viewHolder.ntf_onoff.setSelected(ntf.isActivated());
         viewHolder.ntf_menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,7 +129,6 @@ public class NotificationBaseAdapter extends BaseAdapter{
                                 editDialog.show();
                                 editDialog.setDialogResult(new NotificationEditDialog.OnMyDialogResult(){
                                     public void finish(Notification ntf){
-                                        //TODO: Use singleton here
                                         NotificationBaseAdapter notificationBaseAdapter = NotificationBaseAdapter.getInstance();
                                         notificationBaseAdapter.replaceItem(ntf,position);
                                         notificationBaseAdapter.notifyDataSetChanged();
@@ -147,14 +150,24 @@ public class NotificationBaseAdapter extends BaseAdapter{
             }
         });
 
-        viewHolder.ntf_onoff.setOnClickListener(new View.OnClickListener() {
+        viewHolder.ntf_onoff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                routeList.get(position).setActivated(viewHolder.ntf_onoff.isActivated());
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                routeList.get(position).setActivated(viewHolder.ntf_onoff.isChecked());
+                Log.d("test","oncheck"+viewHolder.ntf_onoff.isChecked());
                 notifyDataSetChanged();
             }
         });
 
+ /*       viewHolder.ntf_onoff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                routeList.get(position).setActivated(viewHolder.ntf_onoff.isChecked());
+                Log.d("test",""+viewHolder.ntf_onoff.isChecked());
+                notifyDataSetChanged();
+            }
+        });
+*/
         return view;
     }
 
