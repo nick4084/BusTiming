@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 public class SimplifiedBusStop implements Comparable<SimplifiedBusStop>{
 

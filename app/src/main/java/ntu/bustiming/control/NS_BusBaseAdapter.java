@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,10 +10,10 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+
+import ntu.bustiming.R;
 
 
 public class NS_BusBaseAdapter extends BaseAdapter{

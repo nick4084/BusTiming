@@ -1,21 +1,17 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import org.json.JSONObject;
+import ntu.bustiming.R;
 
 public class NotificationSearchDialog extends Dialog{
     Context context;
