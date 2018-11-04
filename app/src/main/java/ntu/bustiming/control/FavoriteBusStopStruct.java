@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 import org.json.JSONException;
 import org.json.JSONObject;

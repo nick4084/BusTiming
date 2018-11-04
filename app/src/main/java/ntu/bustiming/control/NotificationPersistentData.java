@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,6 +9,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.BitSet;
+
+import ntu.bustiming.entity.Notification;
 
 /**
  * This class saves the notification entries in sharedPreference

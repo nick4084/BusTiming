@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.entity;
 
 import android.content.Context;
 import android.location.Location;
@@ -24,11 +24,11 @@ public class BusStops {
     Double range =0.01;
     Double Long= 0.0;
     Double Lat= 0.0;
-    static String Param_Lat="Latitude";
-    static String Param_Lon="Longitude";
-    static String Param_busstop_code="BusStopCode";
-    static String Param_roadname="RoadName";
-    static String Param_description="Description";
+    public static String Param_Lat="Latitude";
+    public static String Param_Lon="Longitude";
+    public static String Param_busstop_code="BusStopCode";
+    public static String Param_roadname="RoadName";
+    public static String Param_description="Description";
 
 
     /**

@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -28,6 +28,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import ntu.bustiming.entity.BusStopStruct;
+import ntu.bustiming.R;
 
 /**
  * This Class control the logic of the Nearby tab which holds a google Map

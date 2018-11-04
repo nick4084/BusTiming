@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -17,6 +17,8 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import ntu.bustiming.R;
 
 /**
  * This class is the controller for bus timing dialog pop up.

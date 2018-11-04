@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.entity;
 
 import org.json.JSONArray;
 import org.json.JSONException;

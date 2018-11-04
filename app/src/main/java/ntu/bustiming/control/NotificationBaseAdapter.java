@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 import android.app.AlarmManager;
 import android.app.NotificationManager;
@@ -17,6 +17,9 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
+
+import ntu.bustiming.entity.Notification;
+import ntu.bustiming.R;
 
 /**
  * This class is the base adapter that populate the list view of notification

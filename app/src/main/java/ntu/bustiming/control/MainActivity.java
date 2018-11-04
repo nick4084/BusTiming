@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -37,8 +37,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static ntu.bustiming.BusStops.Param_busstop_code;
-import static ntu.bustiming.BusStops.Param_roadname;
+import ntu.bustiming.entity.BusStops;
+import ntu.bustiming.R;
+
+import static ntu.bustiming.entity.BusStops.Param_busstop_code;
+import static ntu.bustiming.entity.BusStops.Param_roadname;
 
 /**
  * This is Initialized when the user launch this application.
@@ -284,12 +287,14 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
         markerOptions.position(latLng);
         markerOptions.title("You");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-        mCurrLocationMarker = gMap.addMarker(markerOptions);
+        if(gMap != null){
+            mCurrLocationMarker = gMap.addMarker(markerOptions);
 
-        //move map camera
-        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
-        addBusStopToMap();
-        mGoogleApiClient.disconnect();
+            //move map camera
+            gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
+            addBusStopToMap();
+            mGoogleApiClient.disconnect();
+        }
 
     }
 

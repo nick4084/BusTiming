@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -18,6 +18,8 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import ntu.bustiming.R;
 
 /**
  * This class setup and establish connection with gov open data weather API
