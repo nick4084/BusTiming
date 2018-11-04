@@ -1,5 +1,4 @@
-package ntu.bustiming;
-
+package ntu.bustiming.control;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -14,11 +13,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ntu.bustiming.FavoriteFragment.OnFragmentInteractionListener;
-
-import static ntu.bustiming.BusStops.Param_busstop_code;
-import static ntu.bustiming.BusStops.Param_description;
-import static ntu.bustiming.BusStops.Param_roadname;
+import ntu.bustiming.entity.BusStops;
+import ntu.bustiming.R;
+import static ntu.bustiming.entity.BusStops.Param_busstop_code;
+import static ntu.bustiming.entity.BusStops.Param_description;
+import static ntu.bustiming.entity.BusStops.Param_roadname;
 
 /**
  * this class handles the search request when the application request for it

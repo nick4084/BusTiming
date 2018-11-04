@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import ntu.bustiming.R;
 
 /**
  * This class defines the control logic of Favourite bus stop

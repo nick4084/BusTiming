@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;

@@ -1,11 +1,9 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-
-import org.json.JSONArray;
 
 /**
  * This class is a page adapter that handles the pages attached to the sliding tab

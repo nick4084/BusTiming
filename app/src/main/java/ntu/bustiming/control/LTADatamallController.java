@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 import android.app.Activity;
 import android.app.ProgressDialog;

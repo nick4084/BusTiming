@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -19,6 +19,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+
+import ntu.bustiming.entity.BusStops;
+import ntu.bustiming.R;
 
 /**
  * This class is the adapter to generate the bus timing item UI
@@ -113,7 +116,7 @@ public class BusTimingBaseAdapter extends BaseAdapter {
      * @param i int row
      * @param view
      * @param viewGroup
-     * @return
+     * @return UI
      */
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {

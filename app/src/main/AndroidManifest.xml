@@ -23,7 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".control.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,7 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SearchableActivity">
+        <activity android:name=".control.SearchableActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
@@ -45,11 +45,11 @@
             android:value="AIzaSyDeHLHYF9wE77nhaJFwvA9AcFBgxJQ-hRE" />
 
         <service
-            android:name=".GPS"
+            android:name=".control.GPS"
             android:process=":my_service" />
 
         <receiver
-            android:name=".NotificationAlarmReceiver"
+            android:name=".control.NotificationAlarmReceiver"
             android:enabled="true"
             android:exported="true" />
     </application>

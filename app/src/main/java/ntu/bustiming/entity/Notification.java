@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.entity;
 
 import java.sql.Time;
 import java.util.BitSet;
@@ -21,7 +21,6 @@ public class Notification {
     public Notification() {
 
     }
-
     public int getId() {
         return id;
     }

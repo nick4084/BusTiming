@@ -1,14 +1,10 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -27,6 +23,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.BitSet;
+
+import ntu.bustiming.entity.Notification;
+import ntu.bustiming.R;
+
 /**
  * This class is the edit dialog of the notification
  */

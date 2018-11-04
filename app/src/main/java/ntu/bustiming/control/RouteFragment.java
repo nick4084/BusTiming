@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+
+import ntu.bustiming.entity.Notification;
+import ntu.bustiming.R;
 
 public class RouteFragment extends Fragment implements View.OnClickListener{
     // TODO: Rename parameter arguments, choose names that match

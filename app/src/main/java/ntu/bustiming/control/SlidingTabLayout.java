@@ -1,4 +1,4 @@
-package ntu.bustiming;
+package ntu.bustiming.control;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -15,6 +15,8 @@ import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import ntu.bustiming.R;
 
 /**
  * Defines the logic of the sliding tab
