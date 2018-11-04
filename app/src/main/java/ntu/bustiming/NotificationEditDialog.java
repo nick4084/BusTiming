@@ -11,15 +11,21 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TimePicker;
 import android.widget.ToggleButton;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.lang.reflect.Field;
 import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.BitSet;
 /**
  * This class is the edit dialog of the notification
@@ -33,6 +39,7 @@ public class NotificationEditDialog extends Dialog {
     ToggleButton ntfDays[];
     Notification ntf;
     Boolean isEditMode;
+    Context context;
     int position;
 
     /**
@@ -41,6 +48,7 @@ public class NotificationEditDialog extends Dialog {
      */
     public NotificationEditDialog(@NonNull Context context) {
         super(context);
+        this.context = context;
         isEditMode = false;
     }
 
@@ -52,6 +60,7 @@ public class NotificationEditDialog extends Dialog {
      */
     public NotificationEditDialog(@NonNull Context context, Notification ntf, int position) {
         super(context);
+        this.context = context;
         this.position = position;
         this.ntf=ntf;
         isEditMode = true;
@@ -83,6 +92,55 @@ public class NotificationEditDialog extends Dialog {
             }
         });
 
+        busstopNameTxt.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                NotificationSearchDialog searchDialog = new NotificationSearchDialog(getContext(),NS_BSBaseAdapter.getInstance());
+                searchDialog.setDialogResult(new NotificationSearchDialog.OnMyDialogResult() {
+                    @Override
+                    public void finish(String result) {
+                        busstopNameTxt.setText(result);
+                        busnumberNameTxt.setText(""); //when busStop is set, bus number cleared
+                        //TODO: get the bus code and run the query
+                        String bsCode = result.substring(0,5);
+                        LTADatamallController lta = new LTADatamallController(context);
+                        ArrayList<String> tmpBusList = new ArrayList<>();
+                        try{
+                            //TODO: filter the buses out
+                            JSONObject jsonObject = lta.getBusArrivalByBusStopCode(bsCode);
+                            JSONArray jsonArray = jsonObject.getJSONArray("Services");
+                            for(int i=0;i<jsonArray.length();i++){
+                                JSONObject bus = jsonArray.getJSONObject(i);
+                                String tmpBus = bus.getString("ServiceNo");
+                                tmpBusList.add(tmpBus);
+                            }
+
+                        }catch(Exception e){
+                            e.printStackTrace();
+                        }
+                        //TODO: Set adapter for bus
+                        NS_BusBaseAdapter.getInstance().setList(tmpBusList);
+                    }
+                });
+                searchDialog.show();
+            }
+        });
+
+        busnumberNameTxt.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                NotificationSearchDialog searchDialog = new NotificationSearchDialog(getContext(),NS_BusBaseAdapter.getInstance());
+                searchDialog.setDialogResult(new NotificationSearchDialog.OnMyDialogResult() {
+                    @Override
+                    public void finish(String result) {
+                        busnumberNameTxt.setText(result);
+                    }
+                });
+                searchDialog.show();
+
+            }
+        });
         if(ntf!=null){
             nameTxt.setText(ntf.getName());
             busstopNameTxt.setText(""+ntf.getBusstop_code());
@@ -98,6 +156,8 @@ public class NotificationEditDialog extends Dialog {
 
     }
 
+
+
     private void save() {
         Notification ntf = new Notification();
         if (TextUtils.isEmpty(nameTxt.getText().toString())) {
@@ -109,12 +169,12 @@ public class NotificationEditDialog extends Dialog {
             busstopNameTxt.setError("Bus stop cannot be null");
             return;
         }
-        ntf.setBusstop_code(Integer.parseInt(busstopNameTxt.getText().toString()));
+        ntf.setBusstop_code(busstopNameTxt.getText().toString());
         if (TextUtils.isEmpty(busnumberNameTxt.getText().toString())) {
             busstopNameTxt.setError("Bus number cannot be null");
             return;
         }
-        ntf.setBus_code(Integer.parseInt(busnumberNameTxt.getText().toString()));
+        ntf.setBus_code(busnumberNameTxt.getText().toString());
         ntf.setNtf_hour(ntfTime.getHour());
         ntf.setNtf_minute(ntfTime.getMinute());
         BitSet days = new BitSet(7);

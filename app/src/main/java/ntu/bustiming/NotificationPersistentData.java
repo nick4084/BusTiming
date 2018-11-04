@@ -125,8 +125,8 @@ public class NotificationPersistentData {
                 Notification ntf = new Notification();
                 ntf.setId(entryList.getJSONObject(i).getInt("id"));
                 ntf.setName(entryList.getJSONObject(i).getString("name"));
-                ntf.setBusstop_code(entryList.getJSONObject(i).getInt("busstop_code"));
-                ntf.setBus_code(entryList.getJSONObject(i).getInt("bus_code"));
+                ntf.setBusstop_code(entryList.getJSONObject(i).getString("busstop_code"));
+                ntf.setBus_code(entryList.getJSONObject(i).getString("bus_code"));
                 ntf.setNtf_hour(entryList.getJSONObject(i).getInt("ntf_hour"));
                 ntf.setNtf_minute(entryList.getJSONObject(i).getInt("ntf_minute"));
                 String ntfDays = (String) entryList.getJSONObject(i).get("ntf_days");

@@ -9,8 +9,8 @@ import java.util.BitSet;
 public class Notification {
     private int id;
     private String name;
-    private int busstop_code;
-    private int bus_code;
+    private String busstop_code;
+    private String bus_code;
     private int ntf_hour;
     private int ntf_minute;
     private boolean isActivated=false;
@@ -38,19 +38,19 @@ public class Notification {
         this.name = name;
     }
 
-    public int getBusstop_code() {
+    public String getBusstop_code() {
         return busstop_code;
     }
 
-    public void setBusstop_code(int busstop_code) {
+    public void setBusstop_code(String busstop_code) {
         this.busstop_code = busstop_code;
     }
 
-    public int getBus_code() {
+    public String getBus_code() {
         return bus_code;
     }
 
-    public void setBus_code(int bus_code) {
+    public void setBus_code(String bus_code) {
         this.bus_code = bus_code;
     }
 
@@ -86,8 +86,18 @@ public class Notification {
         isActivated = activated;
     }
 
-    public String displayTime(){
-        return ""+ntf_hour+":"+ntf_minute;
+    public String displayTime() {
+        String result = "";
+        if(ntf_hour<10){
+            result+=0;
+        }
+        result+=ntf_hour+":";
+        if(ntf_minute<10){
+            result+=0;
+        }
+        result+=ntf_minute;
+        return result;
+        //return ""+ntf_hour+":"+ntf_minute;
     }
 
 

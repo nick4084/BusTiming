@@ -29,7 +29,6 @@ public class NotificationDisplayDialog extends Dialog{
      * @param position The index number of the object within the list
      */
     public NotificationDisplayDialog(@NonNull Context context, Notification ntf, int position) {
-        //TODO: Pass in the index number
         super(context);
         this.position=position;
         this.ntf = ntf;
@@ -59,15 +58,11 @@ public class NotificationDisplayDialog extends Dialog{
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: Call the edit dialog
-                //TODO: Pass in a ntf
-                //TODO: Pass in a value
 
                 NotificationEditDialog editDialog = new NotificationEditDialog(getContext(), ntf, position);
                 editDialog.show();
                 editDialog.setDialogResult(new NotificationEditDialog.OnMyDialogResult(){
                     public void finish(Notification ntf){
-                        //TODO: Use singleton here
                         NotificationBaseAdapter notificationBaseAdapter = NotificationBaseAdapter.getInstance();
                         notificationBaseAdapter.replaceItem(ntf,position);
                         notificationBaseAdapter.notifyDataSetChanged();
