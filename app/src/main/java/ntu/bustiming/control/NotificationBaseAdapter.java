@@ -1,11 +1,9 @@
 package ntu.bustiming.control;
 
 import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.SystemClock;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +17,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import ntu.bustiming.entity.Notification;
 import ntu.bustiming.R;
@@ -34,9 +33,8 @@ public class NotificationBaseAdapter extends BaseAdapter{
     private ArrayList<Notification> routeList;
     private Context context;
     private static NotificationBaseAdapter instance = null;
-    private static NotificationPersistentData notificationPersistentData;
+    private static NotificationDataController notificationDataController;
     private static int ntfCount = 0;
-
 
     /**
      * This is the inner class of notificationBaseAdapter
@@ -71,8 +69,21 @@ public class NotificationBaseAdapter extends BaseAdapter{
     private NotificationBaseAdapter(ArrayList<Notification> routeList, Context context) {
         this.routeList = routeList;
         this.context = context;
-        notificationPersistentData = NotificationPersistentData.getInstance();
-        ntfCount = routeList.size();
+        notificationDataController = NotificationDataController.getInstance();
+        //ntfCount = routeList.size();
+
+        //init ntfCount
+        for(int i=0;i<routeList.size();i++){
+            Notification ntf = routeList.get(i);
+            int tmp = ntfCount;
+            if(!ntf.isActivated())continue;
+            for(int j=0;j<7;j++){
+                if(routeList.get(i).getNtf_days().get(j)){
+                    ntfCount++;
+                }
+            }
+            if(tmp==ntfCount) ntfCount++;
+        }
     }
 
 
@@ -139,8 +150,14 @@ public class NotificationBaseAdapter extends BaseAdapter{
                                 routeList.remove(position);
                                 notifyDataSetChanged();
                                 return true;
+                            case R.id.routeMenuNotify:
+                                Notification tmp = routeList.get(position);
+                                NotificationService ns = new NotificationService(context);
+                                ns.sendNotification(tmp.getBus_code(),tmp.getBusstop_code());
+                                return true;
                             default:
                                 return true;
+
                         }
                     }
                 });
@@ -154,20 +171,9 @@ public class NotificationBaseAdapter extends BaseAdapter{
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 routeList.get(position).setActivated(viewHolder.ntf_onoff.isChecked());
-                Log.d("test","oncheck"+viewHolder.ntf_onoff.isChecked());
                 notifyDataSetChanged();
             }
         });
-
- /*       viewHolder.ntf_onoff.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                routeList.get(position).setActivated(viewHolder.ntf_onoff.isChecked());
-                Log.d("test",""+viewHolder.ntf_onoff.isChecked());
-                notifyDataSetChanged();
-            }
-        });
-*/
         return view;
     }
 
@@ -183,33 +189,52 @@ public class NotificationBaseAdapter extends BaseAdapter{
     @Override
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
-        notificationPersistentData.refreshList(routeList);
-        //TODO: Loop through the items, set alarm manager
-        NotificationManager notificationManager;
-        final int NOTIFICATION_ID = 0;
-        final String PRIMARY_CHANNEL_ID =
-                "primary_notification_channel";
-        Intent notifyIntent = new Intent(context, NotificationAlarmReceiver.class);
-        PendingIntent notifyPendingIntent = PendingIntent.getBroadcast
-                (context, NOTIFICATION_ID, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        if(alarmManager!=null){
-            //cancel all task
-        }
-        long repeatInterval = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
-        long triggerTime = SystemClock.elapsedRealtime()
-                + repeatInterval;
+        notificationDataController.refreshList(routeList);
 
-//If the Toggle is turned on, set the repeating alarm with a 15 minute interval
-        if (alarmManager != null) {
-            alarmManager.setInexactRepeating
-                    (AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                            triggerTime, repeatInterval, notifyPendingIntent);
+        for(int i=0;i<ntfCount;i++){
+            Intent alarmIntent = new Intent(context, NotificationAlarmReceiver.class);
+            PendingIntent pendingAlarm = PendingIntent.getBroadcast(context,i,alarmIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+            AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+            alarmManager.cancel(pendingAlarm);
         }
 
 
         for(int i=0;i<routeList.size();i++){
+            int tmp = ntfCount;
+            Notification ntf = routeList.get(i);
 
+            if(!ntf.isActivated()) continue;
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(System.currentTimeMillis());
+            cal.set(Calendar.HOUR_OF_DAY,(ntf.getNtf_minute()<2)?ntf.getNtf_hour()-1:ntf.getNtf_hour());
+            cal.set(Calendar.MINUTE,(ntf.getNtf_minute()<2)?60+ntf.getNtf_minute()-2:ntf.getNtf_minute()-2);
+            //cal.add(Calendar.SECOND,5);
+            for(int j=0;j<7;j++){
+                if(routeList.get(i).getNtf_days().get(j)){
+                    cal.set(Calendar.DAY_OF_WEEK,(j+1)%7);
+                    Intent alarmIntent = new Intent(context, NotificationAlarmReceiver.class);
+                    alarmIntent.putExtra("busStop",ntf.getBusstop_code().substring(0,5));
+                    alarmIntent.putExtra("busService",ntf.getBus_code());
+
+                    PendingIntent pendingAlarm = PendingIntent.getBroadcast(context,ntfCount++,alarmIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingAlarm);
+                }
+            }
+
+            if(tmp!=ntfCount) continue;
+            //create the intent and put extra
+            Intent alarmIntent = new Intent(context, NotificationAlarmReceiver.class);
+            alarmIntent.putExtra("busStop",ntf.getBusstop_code().substring(0,5));
+            alarmIntent.putExtra("busService",ntf.getBus_code());
+
+            PendingIntent pendingAlarm = PendingIntent.getBroadcast(context,ntfCount++,alarmIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+
+            AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+            alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingAlarm);
+            Log.d("test","alarm set");
         }
     }
 }

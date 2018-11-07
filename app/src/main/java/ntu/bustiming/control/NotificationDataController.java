@@ -16,31 +16,31 @@ import ntu.bustiming.entity.Notification;
  * This class saves the notification entries in sharedPreference
  * It is implemented as a singleton to ensure only one instance is created
  */
-public class NotificationPersistentData {
+public class NotificationDataController {
     private JSONArray entryList;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
     Context context;
     private final String key = "data";
-    private static NotificationPersistentData instance;
+    private static NotificationDataController instance;
     /**
      * This method is the initialisation method that calls the private constructor
      * @param context The context of the app
      */
     public static void init(Context context){
         if(instance==null){
-            instance = new NotificationPersistentData(context);
+            instance = new NotificationDataController(context);
         }
     }
     /**
      * This method will return the instance of this class
      * @return The instance of this class
      */
-    public static NotificationPersistentData getInstance(){
+    public static NotificationDataController getInstance(){
         return instance;
     }
 
-    private NotificationPersistentData(Context context) {
+    private NotificationDataController(Context context) {
         this.context = context;
         entryList = new JSONArray();
         try {
