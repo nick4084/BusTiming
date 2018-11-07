@@ -13,8 +13,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import ntu.bustiming.control.LTADatamallController;
+import ntu.bustiming.entity.*;
 import ntu.bustiming.R;
-
 
 public class NS_BusBaseAdapter extends BaseAdapter{
     private ArrayList<String> fullBusList;

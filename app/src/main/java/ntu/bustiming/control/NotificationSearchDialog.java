@@ -13,6 +13,9 @@ import android.widget.ListView;
 
 import ntu.bustiming.R;
 
+import ntu.bustiming.entity.*;
+import ntu.bustiming.R;
+
 public class NotificationSearchDialog extends Dialog{
     Context context;
     LTADatamallController lta;

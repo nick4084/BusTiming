@@ -15,6 +15,9 @@ import java.util.Collections;
 import package ntu.bustiming.entity.*;
 import ntu.bustiming.R;
 
+import ntu.bustiming.entity.*;
+import ntu.bustiming.R;
+
 public class NS_BSBaseAdapter extends BaseAdapter{
     private ArrayList<SimplifiedBusStop> bsList;
     private ArrayList<SimplifiedBusStop> fullBsList;
