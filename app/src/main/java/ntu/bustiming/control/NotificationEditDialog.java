@@ -91,7 +91,7 @@ public class NotificationEditDialog extends Dialog {
                 save();
             }
         });
-
+        busnumberNameTxt.setEnabled(false);
         busstopNameTxt.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -101,6 +101,7 @@ public class NotificationEditDialog extends Dialog {
                     public void finish(String result) {
                         busstopNameTxt.setText(result);
                         busnumberNameTxt.setText(""); //when busStop is set, bus number cleared
+                        busnumberNameTxt.setEnabled(true);
                         //TODO: get the bus code and run the query
                         String bsCode = result.substring(0,5);
                         LTADatamallController lta = new LTADatamallController(context);
@@ -177,6 +178,7 @@ public class NotificationEditDialog extends Dialog {
         ntf.setBus_code(busnumberNameTxt.getText().toString());
         ntf.setNtf_hour(ntfTime.getHour());
         ntf.setNtf_minute(ntfTime.getMinute());
+        ntf.setActivated(true);
         BitSet days = new BitSet(7);
         for (int i = 0; i < 7; i++) {
             if (ntfDays[i].isChecked()) {
