@@ -142,7 +142,6 @@ public class LTADatamallController {
         p_dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         p_dialog.setCancelable(false);
         p_dialog.show();
-
         try {
             JSONArray BusStops = new JSONArray();
             while(not_done) {
@@ -171,6 +170,56 @@ public class LTADatamallController {
                 path.mkdir();
             }
             File fw = new File(path, "BusStops.txt");
+            output = new BufferedWriter(new FileWriter(fw, false));
+            output.write(dataToFile.toString());
+            output.close();
+        } catch(Exception ex){
+            ex.printStackTrace();
+        }
+        p_dialog.dismiss();
+    }
+
+    public void fetchAllBus(){
+        int skip = 0, size =0;
+        JSONObject lot;
+        JSONArray current;
+        boolean not_done = true;
+        JSONObject dataToFile = new JSONObject();
+        ProgressDialog p_dialog;
+        p_dialog = new ProgressDialog(mContext);
+        p_dialog.setMessage("fetching bus stops...");
+        p_dialog.setIndeterminate(true);
+        p_dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        p_dialog.setCancelable(false);
+        p_dialog.show();
+        try {
+            JSONArray Bus = new JSONArray();
+            while(not_done) {
+                p_dialog.setMessage("fetching bus stops..."+ Integer.toString(skip));
+                lot = new Async1().execute(Integer.toString(skip)).get();
+                current = lot.getJSONArray("value");
+                size = current.length();
+                if(size > 0){
+                    for (int i = 0; i < size; i++) {
+                        Bus.put(current.getJSONObject(i));
+                    }
+                    skip += size;
+                } else {
+                    break;
+                }
+            }
+            p_dialog.setMessage("saving bus...");
+            dataToFile.put("Bs_Last_count", size);
+            dataToFile.put("BS_LAST_SKIP_COUNT", skip);
+            dataToFile.put("Bs_list", Bus);
+
+            Writer output = null;
+            //create directory if not exist
+            File path = new File(mContext.getFilesDir(), "BusTiming");
+            if (!path.exists()) {
+                path.mkdir();
+            }
+            File fw = new File(path, "Bus.txt");
             output = new BufferedWriter(new FileWriter(fw, false));
             output.write(dataToFile.toString());
             output.close();
@@ -240,7 +289,6 @@ public class LTADatamallController {
 
     private class Async extends AsyncTask<String, Integer, JSONObject> {
 
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -297,7 +345,67 @@ public class LTADatamallController {
         @Override
         protected void onPostExecute(JSONObject jsonObject) {
             super.onPostExecute(jsonObject);
+        }
+    }
 
+    private class Async1 extends AsyncTask<String, Integer, JSONObject> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected JSONObject doInBackground(String... params) {
+            int size = 0;
+            JSONObject lot = null;
+            JSONArray current_array = null;
+            JSONArray Bus = new JSONArray();
+            String response="";
+            String s="";
+            URL url;
+            URLConnection connection;
+            HttpURLConnection httpConnection;
+            InputStream content;
+            BufferedReader buffer;
+            String datamall_url;
+            //fetch bus
+            try {
+                datamall_url = "http://datamall2.mytransport.sg/ltaodataservice/BusRoutes?$skip=" + params[0];
+                url = new URL(datamall_url);
+                connection = url.openConnection();
+                httpConnection = (HttpURLConnection) connection;
+                httpConnection.setRequestMethod("GET");
+                httpConnection.addRequestProperty(REQUEST_HEADER_ACCOUNT_KEY, API_KEY);
+                httpConnection.addRequestProperty(REQUEST_HEADER_ACCEPT, ACCEPT_HEADER);
+                httpConnection.connect();
+
+                if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    content = httpConnection.getInputStream();
+                    buffer = new BufferedReader(new InputStreamReader(content));
+                    s = "";
+                    while ((s = buffer.readLine()) != null) {
+                        response += s;
+                    }
+                }
+                httpConnection.disconnect();
+                lot = new JSONObject(response);
+                return lot;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject jsonObject) {
+            super.onPostExecute(jsonObject);
         }
     }
 }

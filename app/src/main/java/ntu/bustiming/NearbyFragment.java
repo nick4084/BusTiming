@@ -188,53 +188,53 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
      * It will re-fetch all bus stop if stored is not the latest.
      */
     public void CheckBusStopFile(){
-            LTADatamallController api = new LTADatamallController(this.getContext());
-            File BusStop_file = new File(getContext().getFilesDir(), "BusTiming/BusStops.txt");
-            if (BusStop_file.exists()) {
-                try {
-                    //check total bus stop count is the same
-                    StringBuilder total = new StringBuilder();
-                    FileInputStream fis = new FileInputStream(BusStop_file);
-                    int numRead =0;
-                    byte[] bytes = new byte[fis.available()];
-                    while ((numRead = fis.read(bytes)) >= 0) {
-                        total.append(new String(bytes, 0, numRead));
-                    }
-                    fis.close();
-                    JSONObject jsonraw = new JSONObject(total.toString());
-                    BusStopStruct bs_struct = new BusStopStruct(jsonraw);
-                    JSONObject temp = api.getBusStops(bs_struct.getBs_Last_Skip_Count());
-                    JSONArray current = temp.getJSONArray("value");
-                    int count = current.length();
-
-
-                    if (count == bs_struct.getBs_Last_Count()) {
-                        //latest
-                        return;
-                    } else {
-                        //re-fetch file;
-                        try {
-                            api.fetchAllBusStop();
-                        } catch(Exception e){ e.printStackTrace(); }
-
-                    }
-                } catch (FileNotFoundException e) {
-                    Log.e("get bus stop file", "File not found: " + e.toString());
-                } catch (IOException e) {
-                    Log.e("get bus stop file", "Can not read file: " + e.toString());
-                }catch (JSONException e) {
-                    Log.e("get bus stop file", "JSON error: " + e.toString());
+        LTADatamallController api = new LTADatamallController(this.getContext());
+        File BusStop_file = new File(getContext().getFilesDir(), "BusTiming/BusStops.txt");
+        if (BusStop_file.exists()) {
+            try {
+                //check total bus stop count is the same
+                StringBuilder total = new StringBuilder();
+                FileInputStream fis = new FileInputStream(BusStop_file);
+                int numRead =0;
+                byte[] bytes = new byte[fis.available()];
+                while ((numRead = fis.read(bytes)) >= 0) {
+                    total.append(new String(bytes, 0, numRead));
                 }
-            } else { //busstop file not yet fetched
-                try {
-                    api.fetchAllBusStop();
-                } catch (Exception e){
-                    e.printStackTrace();
+                fis.close();
+                JSONObject jsonraw = new JSONObject(total.toString());
+                BusStopStruct bs_struct = new BusStopStruct(jsonraw);
+                JSONObject temp = api.getBusStops(bs_struct.getBs_Last_Skip_Count());
+                JSONArray current = temp.getJSONArray("value");
+                int count = current.length();
+
+
+                if (count == bs_struct.getBs_Last_Count()) {
+                    //latest
+                    return;
+                } else {
+                    //re-fetch file;
+                    try {
+                        api.fetchAllBusStop();
+                    } catch(Exception e){ e.printStackTrace(); }
+
                 }
+            } catch (FileNotFoundException e) {
+                Log.e("get bus stop file", "File not found: " + e.toString());
+            } catch (IOException e) {
+                Log.e("get bus stop file", "Can not read file: " + e.toString());
+            }catch (JSONException e) {
+                Log.e("get bus stop file", "JSON error: " + e.toString());
+            }
+        } else { //busstop file not yet fetched
+            try {
+                api.fetchAllBusStop();
+            } catch (Exception e){
+                e.printStackTrace();
             }
         }
+    }
 
-    public void onButtonPressed(Uri uri) {
+        public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onNearbyFragmentInteraction();
         }
