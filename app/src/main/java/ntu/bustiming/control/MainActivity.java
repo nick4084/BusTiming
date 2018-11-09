@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     BusStops busStops_Class = null;
     private FusedLocationProviderClient mFusedLocationClient;
     GoogleMap gMap;
-    ListView lv_favorites;
     JSONArray BusStop_list;
     EditText EditText1;
     public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
@@ -90,8 +89,8 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        createLocationRequest();
         buildGoogleApiClient();
+        createLocationRequest();
         adapter =  new ViewPagerAdapter(getSupportFragmentManager(), Titles, NumbOfTabs, getApplicationContext());
         // Assigning ViewPager View and setting the adapter
         pager = (ViewPager) findViewById(R.id.pager);
@@ -112,11 +111,6 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(pager);
 
-        //check if permission to use location is granted by user
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
-        }
 
         if (checkLocationPermission()) {
             //locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -190,6 +184,18 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
         return "";
     }
 
+    public GoogleApiClient getGoogleAPIClient() {
+        return mGoogleApiClient;
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
     /**
      * check if the user allowed the location permission
      * @return true if user granted permission
@@ -202,11 +208,9 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     @Override
     protected void onStart() {
         super.onStart();
-            mGoogleApiClient.connect();
     }
     protected void onStop() {
         super.onStop();
-        mGoogleApiClient.disconnect();
     }
     @Override
     public void onPause() {
@@ -219,24 +223,6 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
     @Override
     public void onResume() {
         super.onResume();
-        if (mGoogleApiClient.isConnected()) {
-            if (mGoogleApiClient != null && checkLocationPermission()) {
-                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-            }
-        }
-    }
-
-    /**
-     * This method setup the GoogleAPIClient
-     * Only allow single invokcation of this method.
-     * Any subsequent invocation will be suspended
-     */
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
     }
 
     /**
@@ -308,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
         //Check permission.
         gMap = map;
         if(checkLocationPermission()){
-            //Initialize Google Play Services
+            LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED) {
                     //buildGoogleApiClient();

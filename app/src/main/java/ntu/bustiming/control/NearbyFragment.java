@@ -3,22 +3,38 @@ package ntu.bustiming.control;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,12 +47,18 @@ import java.io.IOException;
 
 import ntu.bustiming.entity.BusStopStruct;
 import ntu.bustiming.R;
+import ntu.bustiming.entity.BusStops;
 
 /**
  * This Class control the logic of the Nearby tab which holds a google Map
  */
-public class NearbyFragment extends Fragment implements OnMapReadyCallback {
-    // TODO: Rename parameter arguments, choose names that match
+public class NearbyFragment extends Fragment implements
+        OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
+
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -51,10 +73,18 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
     ProgressDialog p_dialog;
 
     //SupportMapFragment mapFragment;
-    GoogleMap g_map;
-    LocationManager locationManager;
     Context mContext;
     Activity mainAct;
+    Location mLastLocation;
+    LocationManager mLocationManager;
+    Location mCurrentLocation;
+    Marker mCurrLocationMarker;
+    GoogleMap gMap;
+    static GoogleApiClient mGoogleApiClient;
+    BusStops busStops_Class;
+    LocationRequest mLocationRequest;
+    private FusedLocationProviderClient mFusedLocationClient;
+    boolean hasLocation =false;
 
     /**
      * called when the activity is created
@@ -97,12 +127,42 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = getActivity();
+        mainAct =  getActivity();
+        mGoogleApiClient = ((MainActivity)mainAct).getGoogleAPIClient();
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
 
         }
+        mLocationManager = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
+        //check if permission to use location is granted by user
+        if (ContextCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+        }
 
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        if(((MainActivity) mainAct).checkLocationPermission()){
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
+
+        }
+
+        createLocationRequest();
+    }
+
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        startLocationUpdates();
+    }
+    protected void startLocationUpdates() {
+        if(((MainActivity) mainAct).checkLocationPermission() && mGoogleApiClient.isConnected()){
+            //LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+        }
     }
 
     /**
@@ -133,7 +193,6 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mainAct = ((MainActivity) getActivity());
         if(mainAct!= null){
 
             //set default map to singapore
@@ -142,9 +201,9 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
             googleMap.moveCamera(point);
             // animates camera to coordinates
             googleMap.animateCamera(point);
-            if(((MainActivity) mainAct).checkLocationPermission()){
-                g_map=((MainActivity) mainAct).setUpMap(googleMap);
-                g_map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            if(((MainActivity) mainAct).checkLocationPermission()) {
+                gMap = setUpMap(googleMap);
+                gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                     @Override
                     public boolean onMarkerClick(Marker marker) {
                         if (marker.getTitle().toString() != "You") {
@@ -152,7 +211,7 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
                                 String BusStopCode = marker.getTitle().substring(marker.getTitle().lastIndexOf("(") + 1, marker.getTitle().length() - 1);
                                 String BusStopDescription = marker.getTitle().substring(0, marker.getTitle().lastIndexOf("(") - 1);
                                 setUpAndDisplayBusTiming(BusStopCode, BusStopDescription, marker.getPosition().latitude, marker.getPosition().longitude);
-                            }catch(Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                                 return false;
                             }
@@ -162,7 +221,60 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
                     }
                 });
             }
+
+            mFusedLocationClient.getLastLocation().addOnSuccessListener(((MainActivity) mainAct) , new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    // Got last known location. In some rare situations this can be null.
+                    if (location != null){
+                        // Logic to handle location object
+                        hasLocation = true;
+                        mLastLocation = location;
+                        if (mCurrLocationMarker != null) {
+                            mCurrLocationMarker.remove();
+                        }
+                        //Place current location marker
+                        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.position(latLng);
+                        markerOptions.title("You");
+                        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                        if(gMap != null){
+                            mCurrLocationMarker = gMap.addMarker(markerOptions);
+
+                            //move map camera
+                            gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
+                            addBusStopToMap();
+                        }
+                    }
+                }
+            });
         }
+    }
+    /**
+     * Check the device OS and check permission if version is greater that M
+     * Enable map location
+     * @param map ready map
+     * @return GoogleMap
+     */
+    public GoogleMap setUpMap(GoogleMap map){
+        //Check permission.
+        gMap = map;
+        if(((MainActivity) mainAct).checkLocationPermission()){
+            LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED) {
+                    //buildGoogleApiClient();
+                    map.setMyLocationEnabled(true);
+
+                }
+            } else{
+                //buildGoogleApiClient();
+                map.setMyLocationEnabled(true);
+            }
+        }
+
+        return map;
     }
 
     /**
@@ -274,5 +386,89 @@ public class NearbyFragment extends Fragment implements OnMapReadyCallback {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onNearbyFragmentInteraction();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mLastLocation = location;
+        if (mCurrLocationMarker != null) {
+            mCurrLocationMarker.remove();
+        }
+        //Place current location marker
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        markerOptions.title("You");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        if(gMap != null){
+            mCurrLocationMarker = gMap.addMarker(markerOptions);
+
+            //move map camera
+            gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
+            addBusStopToMap();
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
+
+    /**
+     * This method add Marker of bus stop to google map by longitude and latitude
+     */
+    public void addBusStopToMap(){
+        if(busStops_Class ==null){
+            busStops_Class =new BusStops(mContext);
+        }
+        try{
+            JSONArray busstopArray = busStops_Class.getBusStopByLocation(mLastLocation);
+            if(busstopArray!=null) {
+                for (int i = 0; i < busstopArray.length(); i++) {
+                    JSONObject busstopObject = busstopArray.getJSONObject(i);
+                    MarkerOptions busstopMarker = new MarkerOptions();
+                    LatLng latLng = new LatLng(busstopObject.getDouble("Latitude"), busstopObject.getDouble("Longitude"));
+                    busstopMarker.position(latLng);
+                    busstopMarker.title(busstopObject.getString("Description")+ " ("+ busstopObject.getString("BusStopCode")+ ")");
+                    busstopMarker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                    gMap.addMarker(busstopMarker);
+
+                }
+            }
+
+        } catch (JSONException ex){
+            ex.printStackTrace();
+
+        }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ContextCompat.checkSelfPermission(mContext, android.Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED) {
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            mCurrentLocation = mLastLocation;
+            startLocationUpdates();
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }
