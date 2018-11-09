@@ -25,6 +25,9 @@ public class BusStopSearchBaseAdapter extends BaseAdapter {
     static String Param_stopsequence="StopSequence";
     static String Param_busstopcode="BusStopCode";
     static String Param_distance="Distance";
+    String buscode;
+    String roadname;
+    String description;
     LayoutInflater mInflater;
     ArrayList<SimplifiedBus> simplifiedBuses ;
 
@@ -78,6 +81,9 @@ public class BusStopSearchBaseAdapter extends BaseAdapter {
         return Id;
     }
 
+
+
+
     /** set the row of UI based on number of data given
      * @param position
      * @param convertView
@@ -96,6 +102,8 @@ public class BusStopSearchBaseAdapter extends BaseAdapter {
             viewHolder.position = i;
             viewHolder.busStopCode = view.findViewById(R.id.text_view_item_name);
             viewHolder.busStopDescription = view.findViewById(R.id.text_view_item_description);
+            viewHolder.busStopRoad = view.findViewById(R.id.text_view_hidden_code);
+            viewHolder.busStopRoad1 = view.findViewById(R.id.text_view_hidden_code1);
             result = view;
             view.setTag(viewHolder);
         } else {
@@ -104,21 +112,22 @@ public class BusStopSearchBaseAdapter extends BaseAdapter {
         }
 
         final int position = i;
-        viewHolder.busStopCode.setText(bus.getBusStopCode());
-        viewHolder.busStopDescription.setText(bus.getRoadName() + " " + bus.getDirection());
-
-
-
-
+        viewHolder.busStopCode.setText(bus.getDiscription());
+        viewHolder.busStopDescription.setText(bus.getRoadName() + " (" + bus.getBusStopCode()+")");
+        viewHolder.busStopRoad.setText(bus.getBusStopCode());
+        viewHolder.busStopRoad1.setText(bus.getRoadName());
 
 
         return view;
 
     }
 
+
     private static class ViewHolder {
         int position;
         TextView busStopCode;
         TextView busStopDescription;
+        TextView busStopRoad;
+        TextView busStopRoad1;
     }
 }

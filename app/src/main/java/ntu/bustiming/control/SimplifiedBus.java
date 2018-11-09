@@ -7,15 +7,19 @@ public class SimplifiedBus {
     private String busStopCode;
     private String RoadName;
     private String Direction;
+    private String Discription;
+    private String Stopsequence;
 
     public SimplifiedBus() {
     }
 
-    public SimplifiedBus(String serviceNo, String busStopCode, String roadName, String direction) {
+    public SimplifiedBus(String serviceNo, String busStopCode, String roadName, String direction,String Discription,String Stopsequence) {
         this.serviceNo = serviceNo;
         this.busStopCode = busStopCode;
         RoadName = roadName;
         Direction = direction;
+        this.Discription = Discription;
+        this.Stopsequence = Stopsequence;
     }
 
     public String getServiceNo() {
@@ -24,6 +28,14 @@ public class SimplifiedBus {
 
     public void setServiceNo(String serviceNo) {
         this.serviceNo = serviceNo;
+    }
+
+    public String getStopsequence() {
+        return Stopsequence;
+    }
+
+    public void setStopsequence(String stopsequence) {
+        Stopsequence = stopsequence;
     }
 
     public String getBusStopCode() {
@@ -50,5 +62,11 @@ public class SimplifiedBus {
         Direction = direction;
     }
 
+    public String getDiscription() {
+        return Discription;
+    }
 
+    public void setDiscription(String discription) {
+        Discription = discription;
+    }
 }
