@@ -35,6 +35,10 @@ public class NS_BSBaseAdapter extends BaseAdapter{
         }
     }
 
+    public void refreshList(){
+        bsList = fullBsList;
+    }
+
     public static NS_BSBaseAdapter getInstance(){
         return instance;
     }

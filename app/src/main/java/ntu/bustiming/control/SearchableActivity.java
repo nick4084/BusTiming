@@ -40,9 +40,9 @@ public class SearchableActivity extends Activity{
     JSONArray Bus_list;
     JSONArray list_of_sBus;
     ListView list;
-    BusStopSearchBaseAdapter adapter;
+    BusStopSearchBaseAdapter adapter1;
     ArrayList<String> mylist = new ArrayList<String>();
-    ArrayList<SimplifiedBus> simplifiedBuses;
+    ArrayList<SimplifiedBus> simplifiedBuses = new ArrayList<>();
     int count;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,9 +56,8 @@ public class SearchableActivity extends Activity{
         final String description1;
         final String code1;
         final String roadname1;
-/*        list = (ListView) findViewById(R.id.list_notice2);
-        adapter = new BusStopSearchBaseAdapter(this,jsonArray);
-        list.setAdapter(adapter);*/
+
+
 
 
         TextView textView = findViewById(R.id.firstLine);
@@ -84,8 +83,8 @@ public class SearchableActivity extends Activity{
 
         if(message.length()<=3){
             getBusByBusService(message);
-            String serviceno = getBusByBusService1(message);
-            textView.setText(serviceno);
+            adapter1 = new BusStopSearchBaseAdapter(mContext,simplifiedBuses);
+            textView.setText("");
             textView2.setText("");
             textView3.setText("");
         }
@@ -105,14 +104,14 @@ public class SearchableActivity extends Activity{
             });
             textView2.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), "Hello TEST2", Toast.LENGTH_SHORT).show();
+
 
                 }
             });
 
             textView3.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), "Hello TEST3", Toast.LENGTH_SHORT).show();
+
                 }
             });
 
@@ -138,7 +137,6 @@ public class SearchableActivity extends Activity{
             } catch(JSONException e){
                 e.printStackTrace();
             }
-
         }
         return "";
     }
@@ -314,7 +312,7 @@ public class SearchableActivity extends Activity{
              */
             @Override
             public void notifyFavoriteDataChange() {
-                FavoriteFragment f = (FavoriteFragment) adapter.getItem(1);
+                FavoriteFragment f = (FavoriteFragment) MainActivity.adapter.getItem(1);
                 f.refreshData();
             }
         });

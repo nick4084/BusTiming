@@ -219,10 +219,13 @@ public class NotificationBaseAdapter extends BaseAdapter{
             cal.set(Calendar.MINUTE,ntf.getNtf_minute());
             //cal.add(Calendar.SECOND,5);
             for(int j=0;j<7;j++){
+                if(cal.getTimeInMillis()<System.currentTimeMillis()){
+                    cal.add(Calendar.DATE,7);
+                }
                 if(routeList.get(i).getNtf_days().get(j)){
                     cal.set(Calendar.DAY_OF_WEEK,(j+1)%7);
                     Intent alarmIntent = new Intent(context, NotificationAlarmReceiver.class);
-                    alarmIntent.putExtra("busStop",ntf.getBusstop_code().substring(0,5));
+                    alarmIntent.putExtra("busStop",ntf.getBusstop_code());
                     alarmIntent.putExtra("busService",ntf.getBus_code());
 
                     PendingIntent pendingAlarm = PendingIntent.getBroadcast(context,ntfCount++,alarmIntent,PendingIntent.FLAG_UPDATE_CURRENT);
@@ -234,8 +237,11 @@ public class NotificationBaseAdapter extends BaseAdapter{
 
             if(tmp!=ntfCount) continue;
             //create the intent and put extra
+            if(cal.getTimeInMillis()<System.currentTimeMillis()){
+                cal.add(Calendar.DATE,1);
+            }
             Intent alarmIntent = new Intent(context, NotificationAlarmReceiver.class);
-            alarmIntent.putExtra("busStop",ntf.getBusstop_code().substring(0,5));
+            alarmIntent.putExtra("busStop",ntf.getBusstop_code());
             alarmIntent.putExtra("busService",ntf.getBus_code());
 
             PendingIntent pendingAlarm = PendingIntent.getBroadcast(context,ntfCount++,alarmIntent,PendingIntent.FLAG_UPDATE_CURRENT);

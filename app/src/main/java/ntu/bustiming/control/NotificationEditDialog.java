@@ -91,10 +91,11 @@ public class NotificationEditDialog extends Dialog {
                 save();
             }
         });
-        busnumberNameTxt.setEnabled(false);
+        if(busstopNameTxt.getText().toString().equals(""))busnumberNameTxt.setEnabled(false);
         busstopNameTxt.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                NS_BSBaseAdapter.getInstance().refreshList();
                 NotificationSearchDialog searchDialog = new NotificationSearchDialog(getContext(), NS_BSBaseAdapter.getInstance());
                 searchDialog.setDialogResult(new NotificationSearchDialog.OnMyDialogResult() {
                     @Override

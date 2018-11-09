@@ -11,6 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import ntu.bustiming.R;
 
 /**
@@ -23,18 +25,18 @@ public class BusStopSearchBaseAdapter extends BaseAdapter {
     static String Param_stopsequence="StopSequence";
     static String Param_busstopcode="BusStopCode";
     static String Param_distance="Distance";
-    JSONArray mBus_search_JSONArray;
     LayoutInflater mInflater;
+    ArrayList<SimplifiedBus> simplifiedBuses ;
 
 
     /** constructor for the base adapter
      * @param context application context
      * @param bus_search_array json array of bus stop
      */
-    public BusStopSearchBaseAdapter(Context context, JSONArray bus_search_array) {
+    public BusStopSearchBaseAdapter(Context context, ArrayList<SimplifiedBus>  busArray ) {
         mcontext = context;
-        mBus_search_JSONArray = bus_search_array;
         mInflater = LayoutInflater.from(context);
+        simplifiedBuses = busArray;
     }
 
     /** get the size of the list
@@ -42,7 +44,7 @@ public class BusStopSearchBaseAdapter extends BaseAdapter {
      */
     @Override
     public int getCount() {
-        return mBus_search_JSONArray.length();
+        return simplifiedBuses.size();
     }
 
     /** get object based on its position
@@ -50,13 +52,15 @@ public class BusStopSearchBaseAdapter extends BaseAdapter {
      * @return object of the specified row
      */
     @Override
-    public Object getItem(int position) {
+    public SimplifiedBus getItem(int position) {
         try {
-            return mBus_search_JSONArray.get(position);
-        } catch (JSONException e) {
+            return simplifiedBuses.get(position);
+        }catch(Exception e){
             e.printStackTrace();
             return null;
         }
+
+
     }
     /** return item id of the row
      * @param position integer of the row
@@ -66,9 +70,8 @@ public class BusStopSearchBaseAdapter extends BaseAdapter {
     public long getItemId(int position) {
         long Id = 0;
         try {
-            JSONObject jObject = mBus_search_JSONArray.getJSONObject(position);
-            Id = jObject.getLong(Param_serviceno);
-        } catch (JSONException e) {
+            Id = (long)Integer.parseInt(simplifiedBuses.get(position).getServiceNo());
+        } catch (Exception e) {
             e.printStackTrace();
             return 0;
         }
@@ -82,8 +85,40 @@ public class BusStopSearchBaseAdapter extends BaseAdapter {
      * @return view
      */
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        return convertView;
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        SimplifiedBus bus = simplifiedBuses.get(i);
+        final ViewHolder viewHolder;
+        final View result;
+        if (view == null) {
+            viewHolder = new ViewHolder();
+            LayoutInflater inflater = LayoutInflater.from(mcontext);
+            view = inflater.inflate(R.layout.bus_search_list_item, null);
+            viewHolder.position = i;
+            viewHolder.busStopCode = view.findViewById(R.id.text_view_item_name);
+            viewHolder.busStopDescription = view.findViewById(R.id.text_view_item_description);
+            result = view;
+            view.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) view.getTag();
+            result = view;
+        }
 
+        final int position = i;
+        viewHolder.busStopCode.setText(bus.getBusStopCode());
+        viewHolder.busStopDescription.setText(bus.getRoadName() + " " + bus.getDirection());
+
+
+
+
+
+
+        return view;
+
+    }
+
+    private static class ViewHolder {
+        int position;
+        TextView busStopCode;
+        TextView busStopDescription;
     }
 }

@@ -85,7 +85,7 @@ public class RouteFragment extends Fragment implements View.OnClickListener{
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        Notification ntf = routeList.get(i);
+                        Notification ntf = (Notification) notificationBaseAdapter.getItem(i);
                         NotificationDisplayDialog displayDialog = new NotificationDisplayDialog(getContext(),routeList.get(i),i);
                         displayDialog.show();
                     }
