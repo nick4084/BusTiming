@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,7 @@ public class RouteFragment extends Fragment implements View.OnClickListener{
     private ArrayList<Notification> routeList;
     private ListView listView;
     private static NotificationBaseAdapter notificationBaseAdapter;
-    private static NotificationPersistentData notificationPersistentData;
+    private static NotificationDataController notificationDataController;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -75,9 +74,9 @@ public class RouteFragment extends Fragment implements View.OnClickListener{
         NS_BusBaseAdapter.init(getContext());
 
         listView = view.findViewById(R.id.notifyList);
-        NotificationPersistentData.init(getContext());
-        notificationPersistentData = NotificationPersistentData.getInstance();
-        routeList = notificationPersistentData.getEntryList();
+        NotificationDataController.init(getContext());
+        notificationDataController = NotificationDataController.getInstance();
+        routeList = notificationDataController.getEntryList();
         NotificationBaseAdapter.init(routeList, getContext());
         notificationBaseAdapter = NotificationBaseAdapter.getInstance();
 
@@ -129,8 +128,6 @@ public class RouteFragment extends Fragment implements View.OnClickListener{
                 notificationBaseAdapter.notifyDataSetChanged();
             }
         });
-        NotificationService ns = new NotificationService(getContext());
-        ns.sendNotification();
     }
 
     /**
