@@ -91,7 +91,7 @@ public class BusStopSearchBaseAdapter extends BaseAdapter {
      * @return view
      */
     @Override
-    public View getView(final int i, View view, ViewGroup viewGroup) {
+    public View getView(int i, View view, ViewGroup viewGroup) {
         SimplifiedBus bus = simplifiedBuses.get(i);
         final ViewHolder viewHolder;
         final View result;
@@ -102,6 +102,8 @@ public class BusStopSearchBaseAdapter extends BaseAdapter {
             viewHolder.position = i;
             viewHolder.busStopCode = view.findViewById(R.id.text_view_item_name);
             viewHolder.busStopDescription = view.findViewById(R.id.text_view_item_description);
+            viewHolder.busStopRoad = view.findViewById(R.id.text_view_hidden_code);
+            viewHolder.busStopRoad1 = view.findViewById(R.id.text_view_hidden_code1);
             result = view;
             view.setTag(viewHolder);
         } else {
@@ -112,59 +114,20 @@ public class BusStopSearchBaseAdapter extends BaseAdapter {
         final int position = i;
         viewHolder.busStopCode.setText(bus.getDiscription());
         viewHolder.busStopDescription.setText(bus.getRoadName() + " (" + bus.getBusStopCode()+")");
-        buscode = bus.getBusStopCode();
-        roadname = bus.getRoadName();
-        description = bus.getDiscription();
+        viewHolder.busStopRoad.setText(bus.getBusStopCode());
+        viewHolder.busStopRoad1.setText(bus.getRoadName());
 
-        viewHolder.busStopCode.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                LTADatamallController LTADatamallController = new LTADatamallController(mcontext);
-                JSONObject bus_arrival_timing = LTADatamallController.getBusArrivalByBusStopCode(buscode);
-                try {
-                    displayBusTiming(bus_arrival_timing, buscode, description, roadname);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
-        viewHolder.busStopDescription.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                LTADatamallController LTADatamallController = new LTADatamallController(mcontext);
-                JSONObject bus_arrival_timing = LTADatamallController.getBusArrivalByBusStopCode(buscode);
-                try {
-                    displayBusTiming(bus_arrival_timing, buscode, description, roadname);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
 
         return view;
 
     }
 
-    public void displayBusTiming(JSONObject busTiming, String BusStopCode, String BusStopDescription, String road) {
-        //display bus timing dialog pop up
-        BusTimingDialog TimingDialog = new BusTimingDialog(mcontext, busTiming, BusStopCode, BusStopDescription, road, new BusTimingDialog.OnDialogClickListener() {
-            /**
-             * Must Implement method
-             * Observer will call this method when Favorite fragment is changed
-             */
-            @Override
-            public void notifyFavoriteDataChange() {
-                FavoriteFragment f = (FavoriteFragment) MainActivity.adapter.getItem(1);
-                f.refreshData();
-            }
-        });
-        TimingDialog.show();
-    }
 
     private static class ViewHolder {
         int position;
         TextView busStopCode;
         TextView busStopDescription;
+        TextView busStopRoad;
+        TextView busStopRoad1;
     }
 }

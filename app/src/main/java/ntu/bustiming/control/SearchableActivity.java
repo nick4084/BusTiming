@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -66,9 +67,6 @@ public class SearchableActivity extends Activity{
         Button btn2 = new Button(this);
         listView = findViewById(R.id.list_search);
 
-
-
-
         TextView textView = findViewById(R.id.firstLine);
         TextView textView2 = findViewById(R.id.secondLine);
         TextView textView3 = findViewById(R.id.thirdLine);
@@ -129,6 +127,20 @@ public class SearchableActivity extends Activity{
                 listView.setAdapter(adapter2);
             }
         });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SimplifiedBus bus =(SimplifiedBus) parent.getItemAtPosition(position);
+                LTADatamallController LTADatamallController = new LTADatamallController(getApplicationContext());
+                JSONObject bus_arrival_timing = LTADatamallController.getBusArrivalByBusStopCode(bus.getBusStopCode());
+                try {
+                    displayBusTiming(bus_arrival_timing, bus.getServiceNo(), bus.getDiscription(), bus.getRoadName());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
 
 
             textView.setOnClickListener(new View.OnClickListener() {
