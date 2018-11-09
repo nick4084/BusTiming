@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,9 +43,13 @@ public class SearchableActivity extends Activity{
     JSONArray list_of_sBus;
     ListView list;
     BusStopSearchBaseAdapter adapter1;
+    BusStopSearchBaseAdapter adapter2;
     ArrayList<String> mylist = new ArrayList<String>();
     ArrayList<SimplifiedBus> simplifiedBuses = new ArrayList<>();
+    ArrayList<SimplifiedBus> simplifiedBusesR = new ArrayList<>();
+    ArrayList<SimplifiedBus> simplifiedBusesF = new ArrayList<>();
     int count;
+    ListView listView;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +62,9 @@ public class SearchableActivity extends Activity{
         final String description1;
         final String code1;
         final String roadname1;
+        Button btn1 = new Button(this);
+        Button btn2 = new Button(this);
+        listView = findViewById(R.id.list_search);
 
 
 
@@ -83,11 +92,43 @@ public class SearchableActivity extends Activity{
 
         if(message.length()<=3){
             getBusByBusService(message);
-            adapter1 = new BusStopSearchBaseAdapter(mContext,simplifiedBuses);
-            textView.setText("");
-            textView2.setText("");
-            textView3.setText("");
+            simplifiedBusesR = getSimplifiedBusesReverse();
+            simplifiedBusesF = getSimplifiedBusesForward();
+            LinearLayout l_layout = findViewById(R.id.linearLayout);
+            listView = listView.findViewById(R.id.list_search);
+            if(simplifiedBusesR == null){
+                adapter1 = new BusStopSearchBaseAdapter(this,simplifiedBuses);
+
+            }else {
+                adapter1 = new BusStopSearchBaseAdapter(this,simplifiedBusesF);
+                adapter2 = new BusStopSearchBaseAdapter(this,simplifiedBusesR);
+
+                btn1.setText("Direction 1");
+                btn2.setText("Direction 2");
+                l_layout.addView(btn1);
+                l_layout.addView(btn2);
+            }
+            listView.setAdapter(adapter1);
+                textView.setVisibility(View.GONE);
+                textView2.setVisibility(View.GONE);
+                textView3.setVisibility(View.GONE);
+
         }
+
+        btn1.setOnClickListener(new View.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(View v) {
+                                        listView.setAdapter(adapter1);
+                                    }
+                                });
+        btn2.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                listView.setAdapter(adapter2);
+            }
+        });
 
 
             textView.setOnClickListener(new View.OnClickListener() {
@@ -256,6 +297,28 @@ public class SearchableActivity extends Activity{
         return "";
     }
 
+    public ArrayList<SimplifiedBus> getSimplifiedBusesReverse() {
+        ArrayList<SimplifiedBus> reversebus = new ArrayList<>();
+        int i;
+        for( i=0;i<simplifiedBuses.size();i++){
+            if(Integer.parseInt(simplifiedBuses.get(i).getDirection())==2){
+                reversebus.add(simplifiedBuses.get(i));
+            }
+        }
+        return reversebus;
+    }
+
+    public ArrayList<SimplifiedBus> getSimplifiedBusesForward() {
+        ArrayList<SimplifiedBus> forwardbus = new ArrayList<>();
+        int i;
+        for( i=0;i<simplifiedBuses.size();i++){
+            if(Integer.parseInt(simplifiedBuses.get(i).getDirection())==1){
+                forwardbus.add(simplifiedBuses.get(i));
+            }
+        }
+        return forwardbus;
+    }
+
     public void getBusByBusService(String service){
         if(Bus_list==null){
             setUpBusList();
@@ -270,8 +333,10 @@ public class SearchableActivity extends Activity{
                     String busstopcode = bus.getString(Param_busstopcode);
                     String direction = bus.getString(Param_direction);
                     String stopsequence = bus.getString(Param_stopsequence);
+                    String discription = getBusStopDescriptionByCode(busstopcode);
+                    String roadname = getBusStopRdByCode(busstopcode);
 
-                    SimplifiedBus bus1 = new SimplifiedBus(serviceno,busstopcode,direction,stopsequence);
+                    SimplifiedBus bus1 = new SimplifiedBus(serviceno,busstopcode,roadname,direction,discription,stopsequence);
                     simplifiedBuses.add(bus1);
                 }
             } catch(JSONException e){
