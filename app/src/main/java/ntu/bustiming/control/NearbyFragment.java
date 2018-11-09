@@ -178,6 +178,7 @@ public class NearbyFragment extends Fragment implements
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.nearby_fragment, container, false);
 
+        CheckBusFile();
         CheckBusStopFile();
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map_fragment);
@@ -325,6 +326,7 @@ public class NearbyFragment extends Fragment implements
 
                 if (count == bs_struct.getBs_Last_Count()) {
                     //latest
+                    Log.e("get bus stop file", "File found: ");
                     return;
                 } else {
                     //re-fetch file;
@@ -343,6 +345,54 @@ public class NearbyFragment extends Fragment implements
         } else { //busstop file not yet fetched
             try {
                 api.fetchAllBusStop();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void CheckBusFile(){
+        LTADatamallController api = new LTADatamallController(this.getContext());
+        File Bus_file = new File(getContext().getFilesDir(), "BusTiming/Bus.txt");
+        if (Bus_file.exists()) {
+            try {
+                //check total bus  count is the same
+                StringBuilder total = new StringBuilder();
+                FileInputStream fis = new FileInputStream(Bus_file);
+                int numRead =0;
+                byte[] bytes = new byte[fis.available()];
+                while ((numRead = fis.read(bytes)) >= 0) {
+                    total.append(new String(bytes, 0, numRead));
+                }
+                fis.close();
+                JSONObject jsonraw = new JSONObject(total.toString());
+                BusStruct b_struct = new BusStruct(jsonraw);
+                JSONObject temp = api.getBusRoute(b_struct.getBs_Last_Skip_Count());
+                JSONArray current = temp.getJSONArray("value");
+                int count = current.length();
+
+
+                if (count == b_struct.getBs_Last_Count()) {
+                    //latest
+                    Log.e("get bus file", "File found: ");
+                    return;
+                } else {
+                    //re-fetch file;
+                    try {
+                        api.fetchAllBus();
+                    } catch(Exception e){ e.printStackTrace(); }
+
+                }
+            } catch (FileNotFoundException e) {
+                Log.e("get bus file", "File not found: " + e.toString());
+            } catch (IOException e) {
+                Log.e("get bus file", "Can not read file: " + e.toString());
+            }catch (JSONException e) {
+                Log.e("get bus file", "JSON error: " + e.toString());
+            }
+        } else { //bus file not yet fetched
+            try {
+                api.fetchAllBus();
             } catch (Exception e){
                 e.printStackTrace();
             }

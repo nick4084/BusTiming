@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements FavoriteFragment.
                 }
             });
         }
-    setUpBusStopList();
+        setUpBusStopList();
         EditText1 = (EditText) findViewById(R.id.et_search);
 
         EditText1.setOnEditorActionListener(new TextView.OnEditorActionListener() {

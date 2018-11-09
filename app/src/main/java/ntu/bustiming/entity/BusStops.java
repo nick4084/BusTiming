@@ -156,7 +156,5 @@ public class BusStops {
             Log.i("readBusStopfile", "conversion error");
             return null;
         }
-
-
     }
 }

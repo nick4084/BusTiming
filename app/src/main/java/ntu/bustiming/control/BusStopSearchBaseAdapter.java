@@ -18,12 +18,12 @@ import ntu.bustiming.R;
  */
 public class BusStopSearchBaseAdapter extends BaseAdapter {
     Context mcontext;
+    static String Param_serviceno="ServiceNo";
+    static String Param_direction="Direction";
+    static String Param_stopsequence="StopSequence";
+    static String Param_busstopcode="BusStopCode";
+    static String Param_distance="Distance";
     JSONArray mBus_search_JSONArray;
-    String Param_Lat="Latitude";
-    String Param_Lon="Longitude";
-    String Param_busstop_code="BusStopCode";
-    String Param_roadname="RoadName";
-    String Param_description="Description";
     LayoutInflater mInflater;
 
 
@@ -58,7 +58,6 @@ public class BusStopSearchBaseAdapter extends BaseAdapter {
             return null;
         }
     }
-
     /** return item id of the row
      * @param position integer of the row
      * @return ID
@@ -68,7 +67,7 @@ public class BusStopSearchBaseAdapter extends BaseAdapter {
         long Id = 0;
         try {
             JSONObject jObject = mBus_search_JSONArray.getJSONObject(position);
-            Id = jObject.getLong(Param_busstop_code);
+            Id = jObject.getLong(Param_serviceno);
         } catch (JSONException e) {
             e.printStackTrace();
             return 0;
@@ -84,22 +83,7 @@ public class BusStopSearchBaseAdapter extends BaseAdapter {
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View vi = convertView;
-        if (convertView == null)
-            vi = mInflater.inflate(R.layout.bus_search_list_item, null);
-        TextView Textview1 = (TextView) vi.findViewById(R.id.firstLine);
-        TextView Textview2 = (TextView) vi.findViewById(R.id.secondLine);
-        TextView Textview3 = (TextView) vi.findViewById(R.id.thirdLine);
-
-        try {
-            Textview1.setText(mBus_search_JSONArray.getJSONObject(position).getString(Param_busstop_code));
-            Textview1.setText(mBus_search_JSONArray.getJSONObject(position).getString(Param_description));
-            Textview1.setText(mBus_search_JSONArray.getJSONObject(position).getString(Param_roadname));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return vi;
+        return convertView;
 
     }
 }

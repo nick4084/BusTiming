@@ -23,6 +23,7 @@ public class Bus {
     static String Param_busstopcode="BusStopCode";
     static String Param_distance="Distance";
 
+
     /** Constructor for the class
      * @param context context of the application
      */

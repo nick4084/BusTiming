@@ -66,6 +66,16 @@ public class BusTimingDialog extends Dialog implements DialogInterface.OnClickLi
         mbusStopRoad = road;
     }
 
+    public BusTimingDialog(@NonNull Context context, JSONObject BusTimingJSON, String BusStopCode, String BusStopSescription, String road, OnDialogClickListener listener) {
+        super(context);
+        mcontext = context;
+        mBusTiming = BusTimingJSON;
+        mbusStopDescription = BusStopSescription;
+        mbusStopCode= BusStopCode;
+        mlistener = listener;
+        mbusStopRoad = road;
+    }
+
     /**
      * instantiate the UIs and get the data required
      * @param savedInstanceState instance state
