@@ -16,6 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import ntu.bustiming.R;
+import ntu.bustiming.entity.FavoriteBusStopStruct;
 
 /**
  * This class defines the control logic of Favourite bus stop

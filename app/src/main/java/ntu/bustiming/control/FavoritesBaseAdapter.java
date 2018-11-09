@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import ntu.bustiming.R;
+import ntu.bustiming.entity.FavoriteBusStopStruct;
 
 /**
  * This Class is a controller of a Listview.

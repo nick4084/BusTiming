@@ -14,6 +14,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 
+import ntu.bustiming.entity.FavoriteBusStopStruct;
+
 /**
  * This class handles the Create, Remove, Update, Delete of favourite bus stop
  */
