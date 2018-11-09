@@ -186,11 +186,17 @@ public class NotificationBaseAdapter extends BaseAdapter{
         routeList.set(position,ntf);
     }
 
+    public void replaceList(ArrayList<Notification> routeList){
+        this.routeList = routeList;
+        notifyDataSetChanged();
+    }
+
     @Override
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
         notificationDataController.refreshList(routeList);
 
+        //cancel
         for(int i=0;i<ntfCount;i++){
             Intent alarmIntent = new Intent(context, NotificationAlarmReceiver.class);
             PendingIntent pendingAlarm = PendingIntent.getBroadcast(context,i,alarmIntent,PendingIntent.FLAG_UPDATE_CURRENT);
@@ -207,8 +213,10 @@ public class NotificationBaseAdapter extends BaseAdapter{
 
             Calendar cal = Calendar.getInstance();
             cal.setTimeInMillis(System.currentTimeMillis());
-            cal.set(Calendar.HOUR_OF_DAY,(ntf.getNtf_minute()<2)?ntf.getNtf_hour()-1:ntf.getNtf_hour());
-            cal.set(Calendar.MINUTE,(ntf.getNtf_minute()<2)?60+ntf.getNtf_minute()-2:ntf.getNtf_minute()-2);
+            //cal.set(Calendar.HOUR_OF_DAY,(ntf.getNtf_minute()<2)?ntf.getNtf_hour()-1:ntf.getNtf_hour());
+            //cal.set(Calendar.MINUTE,(ntf.getNtf_minute()<2)?60+ntf.getNtf_minute()-2:ntf.getNtf_minute()-2);
+            cal.set(Calendar.HOUR_OF_DAY,ntf.getNtf_hour());
+            cal.set(Calendar.MINUTE,ntf.getNtf_minute());
             //cal.add(Calendar.SECOND,5);
             for(int j=0;j<7;j++){
                 if(routeList.get(i).getNtf_days().get(j)){

@@ -125,7 +125,8 @@ public class RouteFragment extends Fragment implements View.OnClickListener{
         editDialog.setDialogResult(new NotificationEditDialog.OnMyDialogResult(){
             public void finish(Notification ntf){
                 routeList.add(ntf);
-                notificationBaseAdapter.notifyDataSetChanged();
+                notificationBaseAdapter.replaceList(routeList);
+                //notificationBaseAdapter.notifyDataSetChanged();
             }
         });
     }
