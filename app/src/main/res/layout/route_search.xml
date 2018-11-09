@@ -10,10 +10,10 @@
 
     <ListView
         android:id="@+id/ntfSearchList"
-        android:layout_width="0dp"
+        android:layout_width="378dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:divider="@drawable/list_divider"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"

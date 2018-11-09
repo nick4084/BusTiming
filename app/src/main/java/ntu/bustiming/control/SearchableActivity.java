@@ -15,75 +15,107 @@ import org.json.JSONObject;
 
 import ntu.bustiming.entity.BusStops;
 import ntu.bustiming.R;
+
+import static ntu.bustiming.control.Bus.Param_busstopcode;
+import static ntu.bustiming.control.Bus.Param_direction;
+import static ntu.bustiming.control.Bus.Param_serviceno;
+import static ntu.bustiming.control.Bus.Param_stopsequence;
 import static ntu.bustiming.entity.BusStops.Param_busstop_code;
 import static ntu.bustiming.entity.BusStops.Param_description;
 import static ntu.bustiming.entity.BusStops.Param_roadname;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 /**
  * this class handles the search request when the application request for it
  */
-public class SearchableActivity extends Activity {
+public class SearchableActivity extends Activity{
 
-    Context mContext;
+    Context mContext ;
     JSONArray BusStop_list;
+    JSONArray Bus_list;
+    JSONArray list_of_sBus;
     ListView list;
     BusStopSearchBaseAdapter adapter;
+    ArrayList<String> mylist = new ArrayList<String>();
+    ArrayList<SimplifiedBus> simplifiedBuses;
+    int count;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_searchable);
         Intent intent = getIntent();
         String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
-        String description1 ="";
-        String roadname1 = "";
-        String code1="";
         JSONArray jsonArray = new JSONArray();
         JSONObject ab = getBusStopobjectByCode(message);
         jsonArray.put(ab);
+        final String description1;
+        final String code1;
+        final String roadname1;
 /*        list = (ListView) findViewById(R.id.list_notice2);
         adapter = new BusStopSearchBaseAdapter(this,jsonArray);
         list.setAdapter(adapter);*/
-
 
 
         TextView textView = findViewById(R.id.firstLine);
         TextView textView2 = findViewById(R.id.secondLine);
         TextView textView3 = findViewById(R.id.thirdLine);
 
-        if(message.length()==5) {
+
+        if (message.length() == 5) {
             description1 = getBusStopDescriptionByCode(message);
             roadname1 = getBusStopRdByCode(message);
-            code1= message;
-        }else{
+            code1 = message;
+            textView.setText(code1);
+            textView2.setText(description1);
+            textView3.setText(roadname1);
+        } else {
             code1 = getBusStopCodeByDescrption(message);
             roadname1 = getBusStopRdNameByDescrption(message);
-            description1= message;
+            description1 = message;
+            textView.setText(code1);
+            textView2.setText(description1);
+            textView3.setText(roadname1);
+        }
+
+        if(message.length()<=3){
+            getBusByBusService(message);
+            String serviceno = getBusByBusService1(message);
+            textView.setText(serviceno);
+            textView2.setText("");
+            textView3.setText("");
         }
 
 
-        textView.setText(code1);
-        textView2.setText(description1);
-        textView3.setText(roadname1);
+            textView.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    LTADatamallController LTADatamallController = new LTADatamallController(getApplicationContext());
+                    JSONObject bus_arrival_timing = LTADatamallController.getBusArrivalByBusStopCode(code1);
+                    try {
+                        displayBusTiming(bus_arrival_timing, code1, description1, roadname1);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-        textView.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"Hello Javatpoint",Toast.LENGTH_SHORT).show();
+                }
+            });
+            textView2.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(), "Hello TEST2", Toast.LENGTH_SHORT).show();
 
-            }
-        });
+                }
+            });
 
-        textView2.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"Hello Javatpoint",Toast.LENGTH_SHORT).show();
+            textView3.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(), "Hello TEST3", Toast.LENGTH_SHORT).show();
+                }
+            });
 
-            }
-        });
-
-        textView3.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"Hello Javatpoint",Toast.LENGTH_SHORT).show();
-            }
-        });
 
     }
 
@@ -207,6 +239,49 @@ public class SearchableActivity extends Activity {
         return "";
     }
 
+    public String getBusByBusService1(String service){
+        if(Bus_list==null){
+            setUpBusList();
+        }
+        JSONObject bus;
+        for (int i = 0; i<Bus_list.length(); i++) {
+            try{
+                bus = Bus_list.getJSONObject(i);
+                String current_service =  bus.getString(Param_serviceno);
+                if(service.equals(current_service)){
+                    return bus.getString(Param_serviceno);
+                }
+            } catch(JSONException e){
+                e.printStackTrace();
+            }
+        }
+        return "";
+    }
+
+    public void getBusByBusService(String service){
+        if(Bus_list==null){
+            setUpBusList();
+        }
+        JSONObject bus;
+        for (int i = 0; i<Bus_list.length(); i++) {
+            try{
+                bus = Bus_list.getJSONObject(i);
+                String current_service =  bus.getString(Param_serviceno);
+                if(service.equals(current_service)){
+                    String serviceno = bus.getString(Param_serviceno);
+                    String busstopcode = bus.getString(Param_busstopcode);
+                    String direction = bus.getString(Param_direction);
+                    String stopsequence = bus.getString(Param_stopsequence);
+
+                    SimplifiedBus bus1 = new SimplifiedBus(serviceno,busstopcode,direction,stopsequence);
+                    simplifiedBuses.add(bus1);
+                }
+            } catch(JSONException e){
+                e.printStackTrace();
+            }
+        }
+    }
+
     /**
      * this method get the list of busstop
      */
@@ -215,37 +290,36 @@ public class SearchableActivity extends Activity {
         BusStop_list  = bs_data.readBusStopfile();
     }
 
+    public void setUpBusList(){
+        Bus b_data = new Bus(this);
+        Bus_list = b_data.readBusfile();
+    }
+
     /**
      * this method display the bus display timing
      */
-    public void setUpAndDisplayBusTiming(){
-        LTADatamallController LTADatamallController = new LTADatamallController(this);
-        JSONObject bus_arrival_timing = LTADatamallController.getBusStops(50);
-        if(bus_arrival_timing!=null){
-            //display bus timing
-            try {
-                /* displayBusTiming(bus_arrival_timing, Busstop_code, Busstop_description);*/
-                //mListener.onNearbyFragmentInteraction();
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-    }
+
 
     /** this method display the bus display timing
      * @param busTiming json object of busstop
      * @param BusStopCode bus stop code
      * @param BusStopDescription bus stop description
      */
-    public void displayBusTiming(JSONObject busTiming, String BusStopCode, String BusStopDescription){
+    public void displayBusTiming(JSONObject busTiming, String BusStopCode, String BusStopDescription, String road) {
         //display bus timing dialog pop up
-        String road = getBusStopRdByCode(BusStopCode);
-        BusTimingDialog TimingDialog = new BusTimingDialog(this, busTiming, BusStopCode, BusStopDescription, 0, 0, road,  new BusTimingDialog.OnDialogClickListener(){
+        BusTimingDialog TimingDialog = new BusTimingDialog(SearchableActivity.this, busTiming, BusStopCode, BusStopDescription, road, new BusTimingDialog.OnDialogClickListener() {
+            /**
+             * Must Implement method
+             * Observer will call this method when Favorite fragment is changed
+             */
             @Override
             public void notifyFavoriteDataChange() {
-
+                FavoriteFragment f = (FavoriteFragment) adapter.getItem(1);
+                f.refreshData();
             }
         });
         TimingDialog.show();
     }
 }
+
+

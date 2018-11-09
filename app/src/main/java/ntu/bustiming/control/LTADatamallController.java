@@ -34,7 +34,7 @@ public class LTADatamallController {
     String API_BUS_ARRIVAL="BusArrivalv2?BusStopCode=";
     String API_BUS_SERVICE="BusServices";
     String API_BUS_STOP="BusStops";
-    String API_BUS_ROUTE="BusRoute";
+    String API_BUS_ROUTE="BusRoutes";
     String REQUEST_HEADER_ACCOUNT_KEY = "AccountKey";
     String REQUEST_HEADER_UNIQUE_USER_ID = "UniqueUserID";
     String REQUEST_HEADER_ACCEPT = "accept";
@@ -97,9 +97,9 @@ public class LTADatamallController {
      * get Bus Route of buses
      * @return a JSONObject of all bus route
      */
-    public JSONObject getBusRoute(){
+    public JSONObject getBusRoute(int skip){
         JSONObject RETURN = null;
-        String URL_PATH = API_URL + API_BUS_ROUTE;
+        String URL_PATH = API_URL + API_BUS_ROUTE+ "?$skip=" + skip;
         try {
             RETURN = new LoadData().execute(URL_PATH).get();
         } catch (Exception e){
@@ -187,7 +187,7 @@ public class LTADatamallController {
         JSONObject dataToFile = new JSONObject();
         ProgressDialog p_dialog;
         p_dialog = new ProgressDialog(mContext);
-        p_dialog.setMessage("fetching bus stops...");
+        p_dialog.setMessage("fetching bus ");
         p_dialog.setIndeterminate(true);
         p_dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         p_dialog.setCancelable(false);
@@ -195,7 +195,7 @@ public class LTADatamallController {
         try {
             JSONArray Bus = new JSONArray();
             while(not_done) {
-                p_dialog.setMessage("fetching bus stops..."+ Integer.toString(skip));
+                p_dialog.setMessage("fetching bus "+ Integer.toString(skip));
                 lot = new Async1().execute(Integer.toString(skip)).get();
                 current = lot.getJSONArray("value");
                 size = current.length();

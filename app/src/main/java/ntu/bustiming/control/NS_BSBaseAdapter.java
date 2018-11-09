@@ -12,7 +12,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import package ntu.bustiming.entity.*;
+import ntu.bustiming.entity.*;
 import ntu.bustiming.R;
 
 import ntu.bustiming.entity.*;
