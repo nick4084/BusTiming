@@ -77,9 +77,9 @@ public class LTADatamallController {
     }
 
     /**
-     * get bus stop in group of 50
+     * get bus stop in group of 500
      * @param skip define the starting skipped index of bus stop
-     * @return JSONObject of 50 bus stop
+     * @return JSONObject of 500 bus stop
      */
     public JSONObject getBusStops(int skip){
         JSONObject RETURN = null;
