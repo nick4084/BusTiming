@@ -55,10 +55,10 @@ public class BusStops {
                 Long=location.getLongitude();
                 //loop every entry to find nearby bus stop
                 for (int i = 0; i < AllBusStop.length(); i++) {
-                    JSONObject current_jobject = AllBusStop.getJSONObject(i);
+                    JSONObject current_jobject = AllBusStop.getJSONObject(i); //iii) i > AllBusStop.length()
                     if (current_jobject != null){
-                        Double cur_long = current_jobject.getDouble(Param_Lon);
-                        Double cur_lat = current_jobject.getDouble(Param_Lat);
+                        Double cur_long = current_jobject.getDouble(Param_Lon); //current_jobject got no object name "Longitude"
+                        Double cur_lat = current_jobject.getDouble(Param_Lat); //current_jobject got no object name "Latitude"
                         //check if within range. if yes, add to array
                         if( (cur_long<(Long+range)&&(cur_long>(Long-range))) && (cur_lat<(Lat+range)&& (cur_lat>(Lat-range))) ){
                             location_bs.put(current_jobject);

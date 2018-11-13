@@ -184,6 +184,7 @@ public class NotificationBaseAdapter extends BaseAdapter{
      */
     public void replaceItem(Notification ntf,int position){
         routeList.set(position,ntf);
+        notifyDataSetChanged();
     }
 
     public void replaceList(ArrayList<Notification> routeList){
