@@ -10,4 +10,9 @@
         android:id="@+id/routeMenuDelete"
         android:title="Delete"
         />
+
+    <item
+        android:id="@+id/routeMenuNotify"
+        android:title="Notify"
+        />
 </menu>
