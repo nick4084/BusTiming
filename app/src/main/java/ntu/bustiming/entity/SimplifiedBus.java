@@ -1,6 +1,9 @@
 package ntu.bustiming.entity;
 
 
+/**
+ * this class is the simplifiedBus class
+ */
 public class SimplifiedBus {
 
     private String serviceNo;
@@ -13,6 +16,15 @@ public class SimplifiedBus {
     public SimplifiedBus() {
     }
 
+    /**
+     * this is the constructor for the simplified bus class
+     * @param serviceNo the bus serviceNo
+     * @param busStopCode the bus stop code
+     * @param roadName the bus stop road name
+     * @param direction the bus drection
+     * @param Discription the bus stop description
+     * @param Stopsequence the bus stop stop sequence
+     */
     public SimplifiedBus(String serviceNo, String busStopCode, String roadName, String direction,String Discription,String Stopsequence) {
         this.serviceNo = serviceNo;
         this.busStopCode = busStopCode;

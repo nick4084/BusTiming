@@ -179,6 +179,9 @@ public class LTADatamallController {
         p_dialog.dismiss();
     }
 
+    /**
+     * this method fetch all the bus and write them to a text file
+     */
     public void fetchAllBus(){
         int skip = 0, size =0;
         JSONObject lot;
@@ -348,6 +351,10 @@ public class LTADatamallController {
         }
     }
 
+    /**
+     * Asynchronously execute DoInBackground by passing in the URL as param[0]
+     * Send HTTP GET request
+     */
     private class Async1 extends AsyncTask<String, Integer, JSONObject> {
 
         @Override
@@ -355,6 +362,11 @@ public class LTADatamallController {
             super.onPreExecute();
         }
 
+        /**
+         * The Async Method that send the HTTP request
+         * @param params array of strings
+         * @return JSONObject of the HTTP request result
+         */
         @Override
         protected JSONObject doInBackground(String... params) {
             int size = 0;

@@ -120,6 +120,9 @@ public class BusStopSearchBaseAdapter extends BaseAdapter {
     }
 
 
+    /**
+     * holds the view of item for the view for more efficient application
+     */
     private static class ViewHolder {
         int position;
         TextView busStopCode;

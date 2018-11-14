@@ -286,25 +286,9 @@ public class SearchableActivity extends Activity{
         return "";
     }
 
-    public String getBusByBusService1(String service){
-        if(Bus_list==null){
-            setUpBusList();
-        }
-        JSONObject bus;
-        for (int i = 0; i<Bus_list.length(); i++) {
-            try{
-                bus = Bus_list.getJSONObject(i);
-                String current_service =  bus.getString(Param_serviceno);
-                if(service.equals(current_service)){
-                    return bus.getString(Param_serviceno);
-                }
-            } catch(JSONException e){
-                e.printStackTrace();
-            }
-        }
-        return "";
-    }
-
+    /** this method return the arraylist that contain buses with direction 2
+     * @return ArrayList of SimplifiedBus
+     */
     public ArrayList<SimplifiedBus> getSimplifiedBusesReverse() {
         ArrayList<SimplifiedBus> reversebus = new ArrayList<>();
         int i;
@@ -316,6 +300,9 @@ public class SearchableActivity extends Activity{
         return reversebus;
     }
 
+    /** this method return the arraylist that contain buses with direction 1
+     * @return ArrayList of SimpilifiedBus
+     */
     public ArrayList<SimplifiedBus> getSimplifiedBusesForward() {
         ArrayList<SimplifiedBus> forwardbus = new ArrayList<>();
         int i;
@@ -327,6 +314,9 @@ public class SearchableActivity extends Activity{
         return forwardbus;
     }
 
+    /** this method populate the simplifiedBuses array using the serviceNo
+     * @param service ServiceNo
+     */
     public void getBusByBusService(String service){
         if(Bus_list==null){
             setUpBusList();
