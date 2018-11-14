@@ -17,6 +17,10 @@ import ntu.bustiming.control.LTADatamallController;
 import ntu.bustiming.entity.*;
 import ntu.bustiming.R;
 
+/**
+ * This class is the base adapter that populate the bus service list view of notification search
+ * It is implemented as a singleton to ensure only one instance is created
+ */
 public class NS_BusBaseAdapter extends BaseAdapter{
     private ArrayList<String> fullBusList;
     private ArrayList<String> busList;
@@ -24,22 +28,35 @@ public class NS_BusBaseAdapter extends BaseAdapter{
     private Context context;
     private static NS_BusBaseAdapter instance = null;
 
+    /**
+     * This is the inner class of NS_BusBaseAdapter
+     * It contains the data needed for every entry in the list view
+     */
     private static class ViewHolder{
         int position;
         TextView busName;
     }
 
+    /**
+     * This method is the initialisation method that calls the private constructor
+     * @param context The context of the app
+     */
     public static void init(Context context){
         if(instance==null){
             instance = new NS_BusBaseAdapter(context);
         }
     }
 
+    /**
+     * This method will return the instance of this class
+     * @return The instance of this class
+     */
     public static NS_BusBaseAdapter getInstance(){
         return instance;
     }
 
-    public NS_BusBaseAdapter(Context context) {
+
+    private NS_BusBaseAdapter(Context context) {
         this.context = context;
         busList = new ArrayList<>();
         fullBusList = new ArrayList<>();
@@ -61,15 +78,28 @@ public class NS_BusBaseAdapter extends BaseAdapter{
         notifyDataSetChanged();
     }
 
+    /**
+     * This method will set the arraylist for this adapter
+     * @param newList The new list to be set
+     */
     public void setList(ArrayList<String> newList){
         busList = newList;
         notifyDataSetChanged();
     }
 
+    /**
+     * This method will return an item from the list
+     * @param i The position of the item the list
+     * @return The item that user requested
+     */
     public String findItem(int i){
         return busList.get(i);
     }
 
+    /**
+     * This method will search for the bus services that match the search term and display it in the list view
+     * @param sTerm The search term
+     */
     public void search(String sTerm){
         busList = new ArrayList<>();
         if(sTerm.equals("")){

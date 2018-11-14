@@ -10,7 +10,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,6 +17,7 @@ import org.json.JSONObject;
 
 import ntu.bustiming.entity.BusStops;
 import ntu.bustiming.R;
+import ntu.bustiming.entity.SimplifiedBus;
 
 import static ntu.bustiming.control.Bus.Param_busstopcode;
 import static ntu.bustiming.control.Bus.Param_direction;
@@ -26,10 +26,6 @@ import static ntu.bustiming.control.Bus.Param_stopsequence;
 import static ntu.bustiming.entity.BusStops.Param_busstop_code;
 import static ntu.bustiming.entity.BusStops.Param_description;
 import static ntu.bustiming.entity.BusStops.Param_roadname;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 

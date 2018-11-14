@@ -15,7 +15,9 @@ import ntu.bustiming.R;
 
 import ntu.bustiming.entity.*;
 import ntu.bustiming.R;
-
+/**
+ * This class is the search dialog of the notification
+ */
 public class NotificationSearchDialog extends Dialog{
     Context context;
     LTADatamallController lta;
@@ -23,6 +25,11 @@ public class NotificationSearchDialog extends Dialog{
     BaseAdapter adapter;
     OnMyDialogResult mDialogResult;
 
+    /**
+     * * This is the constructor of NotificationEditDialog
+     * @param context The context of the app
+     * @param adapter The base adapter to manage the list of search result
+     */
     public NotificationSearchDialog(@NonNull Context context,BaseAdapter adapter) {
         super(context);
         this.context = context;
@@ -82,6 +89,12 @@ public class NotificationSearchDialog extends Dialog{
 
 
     }
+
+    /**
+     * This method is used to implement the Observer pattern
+     * It allows user to create an instance of OnMyDialogResult and set it
+     * @param dialogResult The class that implements OnMyDialogResult interface
+     */
     public void setDialogResult(OnMyDialogResult dialogResult) {
         mDialogResult = dialogResult;
     }

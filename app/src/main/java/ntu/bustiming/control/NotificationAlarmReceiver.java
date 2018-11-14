@@ -74,6 +74,12 @@ public class NotificationAlarmReceiver extends BroadcastReceiver {
         ns.sendNotification(bundle.getString("busService"),bundle.getString("busStop"));
     }
 
+    /**
+     * This method calculate the time difference between two time strings in the format of hh:mm
+     * @param time1 start time
+     * @param time2 end time
+     * @return time difference in minutes
+     */
     private int calTimeDiff(String time1, String time2){
         int hourDiff = Integer.parseInt(time2.substring(0,2))-Integer.parseInt(time1.substring(0,2));
         int minDiff = Integer.parseInt(time2.substring(3))-Integer.parseInt(time1.substring(3));

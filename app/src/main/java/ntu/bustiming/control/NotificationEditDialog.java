@@ -159,7 +159,9 @@ public class NotificationEditDialog extends Dialog {
     }
 
 
-
+    /**
+     * This method will save the information filled in by the user into a notification object and save it into the list
+     */
     private void save() {
         Notification ntf = new Notification();
         if (TextUtils.isEmpty(nameTxt.getText().toString())) {

@@ -44,7 +44,9 @@ public class NotificationService {
         context.getApplicationContext().registerReceiver(receiver,new IntentFilter(ACTION_DISMISS_NOTIFICATION));
     }
 
-
+    /**
+     * This method will create a new notification channel
+     */
     private void createNotificationChannel(){
         notifyManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (android.os.Build.VERSION.SDK_INT >=android.os.Build.VERSION_CODES.O) {
@@ -57,6 +59,13 @@ public class NotificationService {
         }
     }
 
+
+    /**
+     * This method will get the notification builder to build the notification for sending
+     * @param title The title of the notification
+     * @param content The content of the notification
+     * @return The notification builder
+     */
     private NotificationCompat.Builder getNotificationBuilder(String title, String content){
         Intent notificationIntent = new Intent(context,MainActivity.class);
         PendingIntent notificationPendingIntent = PendingIntent.getActivity(context,
@@ -72,7 +81,9 @@ public class NotificationService {
     }
 
     /**
-     * This method will send the notification
+     * This method will send a request to the API server with the passed in arguments, and push a notification to the user
+     * @param busService The specified busService as a parameter in the API request
+     * @param busStop The specified busStop as a parameter in the API request
      */
     public void sendNotification(String busService, String busStop){
         //Bundle bundle = intent.getExtras();

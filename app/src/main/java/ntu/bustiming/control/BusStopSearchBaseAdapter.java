@@ -7,13 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import ntu.bustiming.R;
+import ntu.bustiming.entity.SimplifiedBus;
 
 /**
  * this class is adapter for bus stop search
@@ -34,7 +31,7 @@ public class BusStopSearchBaseAdapter extends BaseAdapter {
 
     /** constructor for the base adapter
      * @param context application context
-     * @param bus_search_array json array of bus stop
+     * @param busArray json array of bus stop
      */
     public BusStopSearchBaseAdapter(Context context, ArrayList<SimplifiedBus>  busArray ) {
         mcontext = context;
@@ -85,9 +82,9 @@ public class BusStopSearchBaseAdapter extends BaseAdapter {
 
 
     /** set the row of UI based on number of data given
-     * @param position
-     * @param convertView
-     * @param parent
+     * @param i
+     * @param view
+     * @param viewGroup
      * @return view
      */
     @Override

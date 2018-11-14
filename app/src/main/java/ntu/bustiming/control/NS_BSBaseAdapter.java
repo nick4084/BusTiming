@@ -18,27 +18,46 @@ import ntu.bustiming.R;
 import ntu.bustiming.entity.*;
 import ntu.bustiming.R;
 
+/**
+ * This class is the base adapter that populate the bus stop list view of notification search
+ * It is implemented as a singleton to ensure only one instance is created
+ */
 public class NS_BSBaseAdapter extends BaseAdapter{
     private ArrayList<SimplifiedBusStop> bsList;
     private ArrayList<SimplifiedBusStop> fullBsList;
     private Context context;
     private static NS_BSBaseAdapter instance = null;
 
+    /**
+     * This is the inner class of NS_BSBaseAdapter
+     * It contains the data needed for every entry in the list view
+     */
     private static class ViewHolder{
         int position;
         TextView busStopName;
     }
 
+    /**
+     * This method is the initialisation method that calls the private constructor
+     * @param context The context of the app
+     */
     public static void init(Context context){
         if(instance==null){
             instance = new NS_BSBaseAdapter(context);
         }
     }
 
+    /**
+     * This method will display the full list of the bus stop
+     */
     public void refreshList(){
         bsList = fullBsList;
     }
 
+    /**
+     * This method will return the instance of this class
+     * @return The instance of this class
+     */
     public static NS_BSBaseAdapter getInstance(){
         return instance;
     }
@@ -80,10 +99,19 @@ public class NS_BSBaseAdapter extends BaseAdapter{
         notifyDataSetChanged();
     }
 
+    /**
+     * This method will return an item from the list
+     * @param i The position of the item the list
+     * @return The item that user requested
+     */
     public SimplifiedBusStop findItem(int i){
         return bsList.get(i);
     }
 
+    /**
+     * This method will search for the bus stops that match the search term and display it in the list view
+     * @param sTerm The search term
+     */
     public void search(String sTerm){
         bsList = new ArrayList<>();
         if(sTerm.equals("")){
